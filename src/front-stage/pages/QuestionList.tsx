@@ -17,6 +17,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import usePagination from '../hooks/usePagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -38,6 +39,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const columns = ['編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
+const initialPage = 0;
+const initialRowsPerPage = 5;
 
 function createData(
   id: number,
@@ -61,13 +64,15 @@ const rows = [
   createData(8, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
 ];
 
-export default function CustomizedTables() {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+export default function QuestionList() {
+  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
+    initialPage,
+    initialRowsPerPage,
+    rows.length
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = useMemo(
     () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -84,15 +89,6 @@ export default function CustomizedTables() {
 
   const handleEndDateChange = (date: Date | null) => {
     setEndDate(date);
-  };
-
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const handleSearchSubmit = (event: React.SyntheticEvent) => {
