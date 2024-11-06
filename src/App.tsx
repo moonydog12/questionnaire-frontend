@@ -1,7 +1,6 @@
 import { Grid2 as Grid } from '@mui/material';
-import BasicTable from './front-stage/ListPage';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import QuestionList from './front-stage/pages/QuestionList';
+import Answer from './front-stage/pages/Answer';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -10,13 +9,12 @@ import '@fontsource/roboto/700.css';
 function App() {
   return (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid container sx={{ display: 'grid', justifyItems: 'center' }}>
-          <Grid size={8}>
-            <BasicTable />
-          </Grid>
+      <Grid container sx={{ display: 'grid', justifyItems: 'center' }}>
+        <Grid size={8}>
+          {/* <QuestionList /> */}
+          <Answer />
         </Grid>
-      </LocalizationProvider>
+      </Grid>
     </>
   );
 }
