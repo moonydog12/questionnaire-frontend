@@ -22,8 +22,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.secondary.dark,
+    color: theme.palette.secondary.contrastText,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -153,7 +153,7 @@ export default function CustomizedTables() {
                 <Button
                   type="submit"
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   sx={{ marginLeft: 'auto' }}
                 >
                   Search
@@ -208,6 +208,7 @@ export default function CustomizedTables() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="每頁筆數"
         />
       </>
     </LocalizationProvider>
