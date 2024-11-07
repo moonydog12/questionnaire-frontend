@@ -1,8 +1,6 @@
 import { Grid2 as Grid } from '@mui/material';
-// import QuestionList from './front-stage/pages/QuestionList';
-import Answer from './front-stage/pages/Answer';
+import Survey from './front-stage/pages/Survey';
 import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
@@ -11,8 +9,7 @@ function App() {
     <>
       <Grid container sx={{ display: 'grid', justifyItems: 'center' }}>
         <Grid size={8}>
-          {/* <QuestionList /> */}
-          <Answer />
+          <Survey />
         </Grid>
       </Grid>
     </>

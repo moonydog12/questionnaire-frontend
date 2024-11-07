@@ -13,7 +13,7 @@ const usePagination = (initialPage: number, initialRowsPerPage: number, rowLengt
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(Number(event.target.value)); // Ensure rowsPerPage is a number
+    setRowsPerPage(Number(event.target.value));
     setPage(0);
   };
 
