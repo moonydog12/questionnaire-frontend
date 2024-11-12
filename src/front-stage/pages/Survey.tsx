@@ -45,7 +45,7 @@ function LabeledTextField({
   );
 }
 
-function Survey() {
+export default function Survey() {
   const [answers, setAnswers] = useState<any>({
     name: '',
     phone: '',
@@ -56,25 +56,31 @@ function Survey() {
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { id, value } = event.target;
     setAnswers({ ...answers, [id]: value });
-    console.log(answers);
   }
 
   function handleRadioChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value } = event.target;
-    console.log(value);
     setAnswers({ ...answers, [questionId]: value });
   }
 
   function handleCheckboxChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value, checked } = event.target;
-    setAnswers({
-      ...answers,
-      [questionId]: {
-        ...answers[questionId],
-        [value]: checked,
-      },
+    setAnswers((prevAnswers: { [x: string]: any }) => {
+      const updatedAnswers = {
+        ...prevAnswers,
+        [questionId]: {
+          ...prevAnswers[questionId],
+        },
+      };
+
+      if (checked) {
+        updatedAnswers[questionId][value] = checked;
+      } else {
+        delete updatedAnswers[questionId][value];
+      }
+
+      return updatedAnswers;
     });
-    console.log(answers);
   }
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
@@ -186,5 +192,3 @@ function Survey() {
     </Paper>
   );
 }
-
-export default Survey;
