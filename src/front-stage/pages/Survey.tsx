@@ -1,3 +1,5 @@
+import React, { useContext, ChangeEvent, FormEvent } from 'react';
+import { SurveyContext } from '../context/SurveyContext';
 import {
   Box,
   Button,
@@ -12,7 +14,6 @@ import {
   Checkbox,
   styled,
 } from '@mui/material';
-import { ChangeEvent, FormEvent, useState } from 'react';
 import { survey } from './fakedata';
 
 // 定義獨立的樣式元件
@@ -46,46 +47,35 @@ function LabeledTextField({
 }
 
 export default function Survey() {
-  const [answers, setAnswers] = useState<any>({
-    name: '',
-    phone: '',
-    email: '',
-    age: '',
-  });
+  const { surveyData, dispatch } = useContext(SurveyContext); // 使用 Context
 
+  // 設置字段值
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { id, value } = event.target;
-    setAnswers({ ...answers, [id]: value });
+    dispatch({ type: 'SET_FIELD', field: id, value });
   }
 
+  // 單選題處理
   function handleRadioChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value } = event.target;
-    setAnswers({ ...answers, [questionId]: value });
+    dispatch({ type: 'SET_SINGLE_CHOICE', questionId, value });
   }
 
+  // 多選題處理
   function handleCheckboxChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value, checked } = event.target;
-    setAnswers((prevAnswers: { [x: string]: any }) => {
-      const updatedAnswers = {
-        ...prevAnswers,
-        [questionId]: {
-          ...prevAnswers[questionId],
-        },
-      };
 
-      if (checked) {
-        updatedAnswers[questionId][value] = checked;
-      } else {
-        delete updatedAnswers[questionId][value];
-      }
-
-      return updatedAnswers;
+    dispatch({
+      type: 'SET_MULTIPLE_CHOICE',
+      questionId,
+      value,
+      checked,
     });
   }
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log(answers);
+    console.log(surveyData);
   }
 
   return (
@@ -102,28 +92,28 @@ export default function Survey() {
         <LabeledTextField
           label="姓名"
           id="name"
-          value={answers.name}
+          value={surveyData.name}
           onChange={handleInputChange}
         />
         <LabeledTextField
           label="手機"
           id="phone"
           type="tel"
-          value={answers.phone}
+          value={surveyData.phone}
           onChange={handleInputChange}
         />
         <LabeledTextField
           label="Email"
           id="email"
           type="email"
-          value={answers.email}
+          value={surveyData.email}
           onChange={handleInputChange}
         />
         <LabeledTextField
           label="年齡"
           id="age"
           type="number"
-          value={answers.age}
+          value={surveyData.age}
           onChange={handleInputChange}
         />
 
@@ -137,7 +127,7 @@ export default function Survey() {
               <FormControl component="fieldset" fullWidth sx={{ mb: 2 }}>
                 <RadioGroup
                   name={String(question.id)}
-                  value={answers[question.id] || ''}
+                  value={surveyData.answers[question.id] || ''}
                   onChange={(event) => handleRadioChange(event, String(question.id))}
                 >
                   {question.options?.map((option: any) => (
@@ -160,8 +150,8 @@ export default function Survey() {
                       control={<Checkbox />}
                       label={option.optionText}
                       value={option.optionId || ''}
-                      checked={answers[question.id]?.[option.optionId] || false}
-                      onChange={(event) => handleCheckboxChange(event, question.id)}
+                      checked={surveyData.answers[question.id]?.[option.optionId] || false}
+                      onChange={(event) => handleCheckboxChange(event, String(question.id))}
                     />
                   ))}
                 </FormGroup>
@@ -171,7 +161,7 @@ export default function Survey() {
               <StyledFormControl fullWidth>
                 <TextField
                   id={String(question.id)}
-                  value={answers[question.id] || ''}
+                  value={surveyData.answers[question.id]}
                   onChange={(event) => handleInputChange(event)}
                   required
                   size="small"
