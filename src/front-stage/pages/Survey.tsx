@@ -1,5 +1,4 @@
-import React, { useContext, ChangeEvent, FormEvent } from 'react';
-import { SurveyContext } from '../context/SurveyContext';
+import { useContext, ChangeEvent, FormEvent } from 'react';
 import {
   Box,
   Button,
@@ -15,8 +14,10 @@ import {
   styled,
 } from '@mui/material';
 import { survey } from './fakedata';
+import { SurveyContext } from '../context/Survey/SurveyContext';
+import { SurveyActionType } from '../context/Survey/interface';
 
-// 定義獨立的樣式元件
+// 定義重複利用的元件
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
@@ -24,7 +25,6 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-// 定義重複利用的 LabeledTextField 元件
 function LabeledTextField({
   label,
   id,
@@ -49,24 +49,30 @@ function LabeledTextField({
 export default function Survey() {
   const { surveyData, dispatch } = useContext(SurveyContext); // 使用 Context
 
-  // 設置字段值
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { id, value } = event.target;
-    dispatch({ type: 'SET_FIELD', field: id, value });
+
+    dispatch({ type: SurveyActionType.SET_FIELD, field: id, value });
   }
 
-  // 單選題處理
+  function handleInputAnswerChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    questionId: string
+  ) {
+    const { value } = event.target;
+    dispatch({ type: SurveyActionType.SET_FIELD_ANSWER, questionId, value });
+  }
+
   function handleRadioChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value } = event.target;
-    dispatch({ type: 'SET_SINGLE_CHOICE', questionId, value });
+    dispatch({ type: SurveyActionType.SET_SINGLE_CHOICE, questionId, value });
   }
 
-  // 多選題處理
   function handleCheckboxChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value, checked } = event.target;
 
     dispatch({
-      type: 'SET_MULTIPLE_CHOICE',
+      type: SurveyActionType.SET_MULTIPLE_CHOICE,
       questionId,
       value,
       checked,
@@ -130,7 +136,7 @@ export default function Survey() {
                   value={surveyData.answers[question.id] || ''}
                   onChange={(event) => handleRadioChange(event, String(question.id))}
                 >
-                  {question.options?.map((option: any) => (
+                  {question.options?.map((option) => (
                     <FormControlLabel
                       key={option.optionId}
                       control={<Radio />}
@@ -144,13 +150,13 @@ export default function Survey() {
             {question.type === 'multiple-choice' && (
               <FormControl component="fieldset" fullWidth sx={{ mb: 2 }}>
                 <FormGroup>
-                  {question.options?.map((option: any) => (
+                  {question.options?.map((option) => (
                     <FormControlLabel
                       key={option.optionId}
                       control={<Checkbox />}
                       label={option.optionText}
                       value={option.optionId || ''}
-                      checked={surveyData.answers[question.id]?.[option.optionId] || false}
+                      checked={surveyData.answers[question.id]?.includes(option.optionId) || false}
                       onChange={(event) => handleCheckboxChange(event, String(question.id))}
                     />
                   ))}
@@ -162,7 +168,7 @@ export default function Survey() {
                 <TextField
                   id={String(question.id)}
                   value={surveyData.answers[question.id]}
-                  onChange={(event) => handleInputChange(event)}
+                  onChange={(event) => handleInputAnswerChange(event, String(question.id))}
                   required
                   size="small"
                   multiline
