@@ -46,7 +46,7 @@ function LabeledTextField({
   );
 }
 
-export default function Survey() {
+export default function SurveyQuestion() {
   const { surveyData, dispatch } = useContext(SurveyDataContext);
   const { survey } = useContext(SurveyQuestionsContext);
 

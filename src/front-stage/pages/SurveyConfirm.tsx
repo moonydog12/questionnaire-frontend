@@ -46,20 +46,18 @@ export default function SurveyConfirm() {
             const userAnswer = surveyData.answers[question.id];
             let displayAnswer;
 
-            if (question.type === 'single-choice' || question.type === 'multiple-choice') {
-              if (Array.isArray(userAnswer)) {
-                displayAnswer = userAnswer
-                  .map((answerId) => {
-                    const option = question.options?.find((opt) => opt.optionId === answerId);
-                    return option?.optionText;
-                  })
-                  .join(', ');
-              } else {
-                const option = question.options?.find((opt) => opt.optionId === userAnswer);
-                displayAnswer = option?.optionText;
-              }
-            } else {
+            if (question.type === 'text') {
               displayAnswer = userAnswer;
+            } else if (question.type === 'multiple-choice' && Array.isArray(userAnswer)) {
+              displayAnswer = userAnswer
+                .map((answerId) => {
+                  const option = question.options?.find((opt) => opt.optionId === answerId);
+                  return option?.optionText;
+                })
+                .join(', ');
+            } else if (question.type === 'single-choice') {
+              const option = question.options?.find((opt) => opt.optionId === userAnswer);
+              displayAnswer = option?.optionText;
             }
 
             return (
