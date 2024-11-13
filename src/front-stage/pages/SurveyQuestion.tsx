@@ -178,6 +178,7 @@ export default function Survey() {
                   size="small"
                   multiline
                   rows={4}
+                  sx={{ mb: 2 }}
                 />
               </StyledFormControl>
             )}
