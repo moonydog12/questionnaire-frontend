@@ -1,4 +1,5 @@
 import { useContext, ChangeEvent, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -49,6 +50,7 @@ function LabeledTextField({
 export default function SurveyQuestion() {
   const { surveyData, dispatch } = useContext(SurveyDataContext);
   const { survey } = useContext(SurveyQuestionsContext);
+  const navigate = useNavigate();
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { id, value } = event.target;
@@ -80,6 +82,7 @@ export default function SurveyQuestion() {
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    navigate('/confirm');
   }
 
   return (
