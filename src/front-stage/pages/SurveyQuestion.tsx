@@ -80,7 +80,6 @@ export default function SurveyQuestion() {
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log(surveyData);
   }
 
   return (
