@@ -1,5 +1,5 @@
 import { ReactNode, useReducer } from 'react';
-import { SurveyContext } from './SurveyContext';
+import { SurveyDataContext } from './SurveyDataContext';
 import { SurveyAction, SurveyData } from './interface';
 
 // 定義初始狀態
@@ -54,6 +54,8 @@ export default function SurveyProvider({ children }: { children: ReactNode }): J
   const [surveyData, dispatch] = useReducer(surveyReducer, initialState);
 
   return (
-    <SurveyContext.Provider value={{ surveyData, dispatch }}>{children}</SurveyContext.Provider>
+    <SurveyDataContext.Provider value={{ surveyData, dispatch }}>
+      {children}
+    </SurveyDataContext.Provider>
   );
 }

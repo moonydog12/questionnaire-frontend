@@ -2,7 +2,8 @@ import { Grid2 as Grid } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import SurveyProvider from './front-stage/context/Survey/SurveyProvider';
+import SurveyDataProvider from './front-stage/context/SurveyData/SurveyDataProvider';
+import { SurveyQuestionsProvider } from './front-stage/context/SurveyQuestion/SurveyQuestionContext';
 import Survey from './front-stage/pages/Survey';
 
 function App() {
@@ -10,9 +11,11 @@ function App() {
     <>
       <Grid container sx={{ display: 'grid', justifyItems: 'center' }}>
         <Grid size={8}>
-          <SurveyProvider>
-            <Survey />
-          </SurveyProvider>
+          <SurveyQuestionsProvider>
+            <SurveyDataProvider>
+              <Survey />
+            </SurveyDataProvider>
+          </SurveyQuestionsProvider>
         </Grid>
       </Grid>
     </>

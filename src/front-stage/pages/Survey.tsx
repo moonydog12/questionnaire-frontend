@@ -13,9 +13,9 @@ import {
   Checkbox,
   styled,
 } from '@mui/material';
-import { survey } from './fakedata';
-import { SurveyContext } from '../context/Survey/SurveyContext';
-import { SurveyActionType } from '../context/Survey/interface';
+import { SurveyDataContext } from '../context/SurveyData/SurveyDataContext';
+import { SurveyActionType } from '../context/SurveyData/interface';
+import { SurveyQuestionsContext } from '../context/SurveyQuestion/SurveyQuestionContext';
 
 // 定義重複利用的元件
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
@@ -47,11 +47,11 @@ function LabeledTextField({
 }
 
 export default function Survey() {
-  const { surveyData, dispatch } = useContext(SurveyContext); // 使用 Context
+  const { surveyData, dispatch } = useContext(SurveyDataContext);
+  const { survey } = useContext(SurveyQuestionsContext);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { id, value } = event.target;
-
     dispatch({ type: SurveyActionType.SET_FIELD, field: id, value });
   }
 
@@ -70,7 +70,6 @@ export default function Survey() {
 
   function handleCheckboxChange(event: ChangeEvent<HTMLInputElement>, questionId: string) {
     const { value, checked } = event.target;
-
     dispatch({
       type: SurveyActionType.SET_MULTIPLE_CHOICE,
       questionId,
@@ -123,12 +122,14 @@ export default function Survey() {
           onChange={handleInputChange}
         />
 
-        {/* 動態生成問卷 */}
+        {/* 動態生成欄位 */}
         {survey.questions.map((question) => (
           <Box key={question.id}>
             <Typography variant="h6" sx={{ mt: 3 }}>
               {question.questionText}
             </Typography>
+
+            {/* 單選 */}
             {question.type === 'single-choice' && (
               <FormControl component="fieldset" fullWidth sx={{ mb: 2 }}>
                 <RadioGroup
@@ -147,6 +148,8 @@ export default function Survey() {
                 </RadioGroup>
               </FormControl>
             )}
+
+            {/* 多選 */}
             {question.type === 'multiple-choice' && (
               <FormControl component="fieldset" fullWidth sx={{ mb: 2 }}>
                 <FormGroup>
@@ -163,6 +166,8 @@ export default function Survey() {
                 </FormGroup>
               </FormControl>
             )}
+
+            {/* 文字 */}
             {question.type === 'text' && (
               <StyledFormControl fullWidth>
                 <TextField
