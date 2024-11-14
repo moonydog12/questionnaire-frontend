@@ -4,14 +4,16 @@ import Layout from './ui/Layout';
 import SurveyQuestion from './front-stage/pages/SurveyQuestion';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import SurveyResult from './front-stage/pages/SurveyResult';
+import Test from './back-stage/pages/test';
 import NotFound from './ui/NotFound';
 
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <NotFound />,
 
     children: [
-      { path: '/', element: <Navigate to={'/list'} replace /> },
+      { path: '/', element: <Navigate to={'list'} /> },
       { path: '/list', element: <SurveyList /> },
       {
         path: '/question',
@@ -26,8 +28,14 @@ const router = createBrowserRouter([
         element: <SurveyResult />,
       },
       {
-        path: '*',
-        element: <NotFound />,
+        path: '/backstage',
+        children: [
+          { index: true, element: <Navigate to={'test'}></Navigate> },
+          {
+            path: 'test',
+            element: <Test />,
+          },
+        ],
       },
     ],
   },

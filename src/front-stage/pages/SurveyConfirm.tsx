@@ -1,11 +1,22 @@
 import { useContext } from 'react';
 import { SurveyDataContext } from '../context/SurveyData/SurveyDataContext';
 import { SurveyQuestionsContext } from '../context/SurveyQuestion/SurveyQuestionContext';
-import { Paper, Typography, Box, Divider, List, ListItem, ListItemText } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function SurveyConfirm() {
   const { surveyData } = useContext(SurveyDataContext);
   const { survey } = useContext(SurveyQuestionsContext);
+  const navigate = useNavigate();
 
   return (
     <Paper sx={{ p: 4 }}>
@@ -68,6 +79,14 @@ export default function SurveyConfirm() {
           })}
         </List>
       </Box>
+
+      <Button
+        onClick={() => {
+          navigate('/question');
+        }}
+      >
+        回上一頁
+      </Button>
     </Paper>
   );
 }

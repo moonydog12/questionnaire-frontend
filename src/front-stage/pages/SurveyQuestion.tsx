@@ -135,9 +135,9 @@ export default function SurveyQuestion() {
             {question.type === 'single-choice' && (
               <FormControl component="fieldset" fullWidth sx={{ mb: 2 }}>
                 <RadioGroup
-                  name={String(question.id)}
-                  value={surveyData.answers[question.id] || ''}
-                  onChange={(event) => handleRadioChange(event, String(question.id))}
+                  name={question.id}
+                  value={surveyData.answers[question.id]}
+                  onChange={(event) => handleRadioChange(event, question.id)}
                 >
                   {question.options?.map((option) => (
                     <FormControlLabel
@@ -162,7 +162,7 @@ export default function SurveyQuestion() {
                       label={option.optionText}
                       value={option.optionId || ''}
                       checked={surveyData.answers[question.id]?.includes(option.optionId) || false}
-                      onChange={(event) => handleCheckboxChange(event, String(question.id))}
+                      onChange={(event) => handleCheckboxChange(event, question.id)}
                     />
                   ))}
                 </FormGroup>
@@ -175,7 +175,7 @@ export default function SurveyQuestion() {
                 <TextField
                   id={String(question.id)}
                   value={surveyData.answers[question.id]}
-                  onChange={(event) => handleInputAnswerChange(event, String(question.id))}
+                  onChange={(event) => handleInputAnswerChange(event, question.id)}
                   required
                   size="small"
                   multiline
