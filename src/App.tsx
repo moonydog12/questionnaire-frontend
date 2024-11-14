@@ -1,14 +1,17 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import SurveyList from './front-stage/pages/SurveyList';
 import Layout from './ui/Layout';
 import SurveyQuestion from './front-stage/pages/SurveyQuestion';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
+import SurveyResult from './front-stage/pages/SurveyResult';
+import NotFound from './ui/NotFound';
 
 const router = createBrowserRouter([
   {
     element: <Layout />,
 
     children: [
+      { path: '/', element: <Navigate to={'/list'} replace /> },
       { path: '/list', element: <SurveyList /> },
       {
         path: '/question',
@@ -17,6 +20,14 @@ const router = createBrowserRouter([
       {
         path: '/confirm',
         element: <SurveyConfirm />,
+      },
+      {
+        path: '/result',
+        element: <SurveyResult />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },

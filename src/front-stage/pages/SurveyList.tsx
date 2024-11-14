@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import {
@@ -18,6 +19,7 @@ import {
   Paper,
 } from '@mui/material';
 import usePagination from '../hooks/usePagination';
+import Unicorn from '../../ui/Unicorn';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -100,8 +102,9 @@ export default function QuestionList() {
 
   return (
     <>
+      <Unicorn />
       {/* 上方搜尋欄 */}
-      <Card sx={{ minWidth: 275, marginBottom: '2rem' }}>
+      <Card sx={{ mb: 3 }}>
         <CardContent>
           <form onSubmit={handleSearchSubmit} style={{ width: '100%' }}>
             <Typography>問卷名稱:</Typography>
@@ -173,11 +176,15 @@ export default function QuestionList() {
             {visibleRows.map((row) => (
               <StyledTableRow key={row.id}>
                 <StyledTableCell align="right">{row.id}</StyledTableCell>
-                <StyledTableCell align="right">{row.name}</StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link to={'/question'}>{row.name}</Link>
+                </StyledTableCell>
                 <StyledTableCell align="right">{row.status}</StyledTableCell>
                 <StyledTableCell align="right">{row.startTime}</StyledTableCell>
                 <StyledTableCell align="right">{row.endTime}</StyledTableCell>
-                <StyledTableCell align="right">{row.result}</StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link to={'/result'}>{row.result}</Link>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
 
@@ -186,7 +193,7 @@ export default function QuestionList() {
                 <TableCell
                   colSpan={6}
                   style={{
-                    height: 33 * emptyRows,
+                    height: 36 * emptyRows,
                   }}
                 />
               </TableRow>

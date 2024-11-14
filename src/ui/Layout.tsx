@@ -1,22 +1,18 @@
 import { Outlet, Link } from 'react-router-dom';
 import { Grid2 as Grid, AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import Unicorn from './Unicorn';
+import HomeIcon from '@mui/icons-material/Home';
 
 function Layout() {
   return (
     <>
       <AppBar position="static" sx={{ bgcolor: 'secondary.dark' }}>
-        <Unicorn />
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dynamic Questionnaire
+            Questionnaire
           </Typography>
           <Button color="inherit" component={Link} to="/">
-            Home
-          </Button>
-          <Button color="inherit" component={Link} to="/surveys">
-            Surveys
+            <HomeIcon />
           </Button>
           <Button color="inherit" component={Link} to="/about">
             <MeetingRoomIcon />
