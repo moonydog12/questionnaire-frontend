@@ -4,13 +4,7 @@ import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import {
   Box,
-  Button,
-  Card,
-  CardContent,
-  FormControl,
   TablePagination,
-  TextField,
-  Typography,
   TableBody,
   Table,
   TableContainer,
@@ -20,6 +14,8 @@ import {
   Checkbox,
 } from '@mui/material';
 import usePagination from '../../hooks/usePagination';
+import SearchBar from '../../components/SearchBar';
+import useSearch from '../../hooks/useSearch';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -67,52 +63,35 @@ const rows = [
 ];
 
 export default function QuestionList() {
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
   const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
     initialPage,
     initialRowsPerPage,
     rows.length
   );
-  const [searchQuery, setSearchQuery] = useState('');
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const {
+    searchQuery,
+    startDate,
+    endDate,
+    handleSearchChange,
+    handleStartDateChange,
+    handleEndDateChange,
+    handleSearchSubmit,
+  } = useSearch();
 
   const visibleRows = useMemo(
     () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [page, rowsPerPage]
   );
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleStartDateChange = (date: Date | null) => {
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (date: Date | null) => {
-    setEndDate(date);
-  };
-
-  const handleSearchSubmit = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-  };
-
   const handleSelectRow = (id: string) => {
     setSelectedRows((prevSelected) => {
-      console.log(prevSelected);
       return prevSelected.includes(id)
         ? prevSelected.filter((selectedId) => selectedId !== id)
         : [...prevSelected, id];
     });
-  };
-
-  const handleSelectAllRows = (event: any) => {
-    if (selectedRows.length > 0) {
-      setSelectedRows([]);
-      return;
-    }
-    setSelectedRows(rows.map((row) => row.id));
   };
 
   return (
@@ -128,76 +107,22 @@ export default function QuestionList() {
       >
         <img src="/src/assets/unicorn-admin.png" alt="Unicorn" style={{ width: '25rem' }} />
       </Box>
-      {/* 上方搜尋欄 */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <form onSubmit={handleSearchSubmit} style={{ width: '100%' }}>
-            <Typography>問卷名稱:</Typography>
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <TextField
-                id="search-field"
-                label="Search"
-                variant="outlined"
-                size="small"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                fullWidth
-                sx={{ maxWidth: '100%' }}
-              />
-            </FormControl>
 
-            {/* Start Date Picker */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-              }}
-            >
-              <Typography>統計時間:</Typography>
-              <TextField
-                type="date"
-                onChange={(e) => handleStartDateChange(new Date(e.target.value))}
-                sx={{ width: 200 }}
-                size="small"
-              />
+      <SearchBar
+        searchQuery={searchQuery}
+        startDate={startDate}
+        endDate={endDate}
+        onSearchChange={handleSearchChange}
+        onStartDateChange={handleStartDateChange}
+        onEndDateChange={handleEndDateChange}
+        onSubmit={handleSearchSubmit}
+      />
 
-              <span>到</span>
-
-              {/* End Date Picker */}
-              <TextField
-                type="date"
-                onChange={(e) => handleEndDateChange(new Date(e.target.value))}
-                sx={{ width: 200 }}
-                size="small"
-              />
-
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                sx={{ marginLeft: 'auto' }}
-              >
-                Search
-              </Button>
-            </Box>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* 列表 table */}
       <TableContainer component={Paper}>
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell padding="checkbox">
-                {/* <Checkbox
-                  indeterminate={selectedRows.length > 0 && selectedRows.length < rows.length}
-                  checked={selectedRows.length === rows.length}
-                  onChange={handleSelectAllRows}
-                /> */}
-                <button onClick={handleSelectAllRows}>犬選</button>
-              </StyledTableCell>
+              <StyledTableCell padding="checkbox"></StyledTableCell>
               {columns.slice(1).map((column) => (
                 <StyledTableCell align="right" key={column}>
                   {column}
