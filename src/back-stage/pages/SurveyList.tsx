@@ -17,9 +17,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Checkbox,
 } from '@mui/material';
 import usePagination from '../../hooks/usePagination';
-import Unicorn from '../../ui/Unicorn';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,12 +40,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const columns = ['編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
+const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
-const initialRowsPerPage = 5;
+const initialRowsPerPage = 10;
 
 function createData(
-  id: number,
+  id: string,
   name: string,
   status: string,
   startTime: string,
@@ -56,14 +56,14 @@ function createData(
 }
 
 const rows = [
-  createData(1, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(2, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(3, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(4, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(5, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(6, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(7, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(8, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('1', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('2', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('3', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('4', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('5', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('6', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('7', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('8', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
 ];
 
 export default function QuestionList() {
@@ -75,6 +75,7 @@ export default function QuestionList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const visibleRows = useMemo(
     () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -95,14 +96,38 @@ export default function QuestionList() {
 
   const handleSearchSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    console.log('Search Query:', searchQuery);
-    console.log('Start Date:', startDate);
-    console.log('End Date:', endDate);
+  };
+
+  const handleSelectRow = (id: string) => {
+    setSelectedRows((prevSelected) => {
+      console.log(prevSelected);
+      return prevSelected.includes(id)
+        ? prevSelected.filter((selectedId) => selectedId !== id)
+        : [...prevSelected, id];
+    });
+  };
+
+  const handleSelectAllRows = (event: any) => {
+    if (selectedRows.length > 0) {
+      setSelectedRows([]);
+      return;
+    }
+    setSelectedRows(rows.map((row) => row.id));
   };
 
   return (
     <>
-      <Unicorn />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '5rem',
+          left: 0,
+          zIndex: -1,
+          transform: 'rotateY(180deg)',
+        }}
+      >
+        <img src="/src/assets/unicorn-admin.png" alt="Unicorn" style={{ width: '25rem' }} />
+      </Box>
       {/* 上方搜尋欄 */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
@@ -165,7 +190,15 @@ export default function QuestionList() {
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              <StyledTableCell padding="checkbox">
+                {/* <Checkbox
+                  indeterminate={selectedRows.length > 0 && selectedRows.length < rows.length}
+                  checked={selectedRows.length === rows.length}
+                  onChange={handleSelectAllRows}
+                /> */}
+                <button onClick={handleSelectAllRows}>犬選</button>
+              </StyledTableCell>
+              {columns.slice(1).map((column) => (
                 <StyledTableCell align="right" key={column}>
                   {column}
                 </StyledTableCell>
@@ -175,6 +208,12 @@ export default function QuestionList() {
           <TableBody>
             {visibleRows.map((row) => (
               <StyledTableRow key={row.id}>
+                <StyledTableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectedRows.includes(row.id)}
+                    onChange={() => handleSelectRow(row.id)}
+                  />
+                </StyledTableCell>
                 <StyledTableCell align="right">{row.id}</StyledTableCell>
                 <StyledTableCell align="right">
                   <Link to={'/question'}>{row.name}</Link>
@@ -191,7 +230,7 @@ export default function QuestionList() {
             {emptyRows > 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   style={{
                     height: 36 * emptyRows,
                   }}
@@ -202,7 +241,7 @@ export default function QuestionList() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[10, 15, 20]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

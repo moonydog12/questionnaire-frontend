@@ -14,7 +14,7 @@ function Layout() {
           <Button color="inherit" component={Link} to="/">
             <HomeIcon />
           </Button>
-          <Button color="inherit" component={Link} to="/about">
+          <Button color="inherit" component={Link} to="/backstage/list">
             <MeetingRoomIcon />
           </Button>
         </Toolbar>

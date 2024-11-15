@@ -4,7 +4,7 @@ import Layout from './ui/Layout';
 import SurveyQuestion from './front-stage/pages/SurveyQuestion';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import SurveyResult from './front-stage/pages/SurveyResult';
-import Test from './back-stage/pages/test';
+import BackStageSurveyList from './back-stage/pages/SurveyList';
 import NotFound from './ui/NotFound';
 
 const router = createBrowserRouter([
@@ -30,10 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/backstage',
         children: [
-          { index: true, element: <Navigate to={'test'}></Navigate> },
+          { index: true, element: <Navigate to={'list'}></Navigate> },
           {
-            path: 'test',
-            element: <Test />,
+            path: 'list',
+            element: <BackStageSurveyList />,
           },
         ],
       },
