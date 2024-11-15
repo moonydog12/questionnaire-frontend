@@ -18,7 +18,7 @@ import { SurveyDataContext } from '../context/SurveyData/SurveyDataContext';
 import { SurveyActionType } from '../context/SurveyData/interface';
 import { SurveyQuestionsContext } from '../context/SurveyQuestion/SurveyQuestionContext';
 
-// 定義重複利用的元件
+// 定義重複利用的樣式
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',

@@ -1,4 +1,4 @@
-// 定義單個問題的型別
+// 定義單一問題型別
 interface SurveyQuestion {
   id: string;
   type: 'text' | 'single-choice' | 'multiple-choice';
@@ -6,7 +6,7 @@ interface SurveyQuestion {
   options?: { optionId: string; optionText: string }[];
 }
 
-// 定義整個問卷的型別
+// 定義問卷的型別
 export interface Survey {
   title: string;
   description: string;

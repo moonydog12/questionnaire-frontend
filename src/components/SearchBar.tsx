@@ -37,7 +37,6 @@ export default function SearchBar({
             />
           </FormControl>
 
-          {/* Start Date Picker */}
           <Box
             sx={{
               display: 'flex',
@@ -55,7 +54,6 @@ export default function SearchBar({
 
             <span>到</span>
 
-            {/* End Date Picker */}
             <TextField
               type="date"
               onChange={(e) => onEndDateChange(new Date(e.target.value))}

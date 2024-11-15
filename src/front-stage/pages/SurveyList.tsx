@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import {
   TablePagination,
   TableBody,
@@ -10,37 +8,21 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TableCell,
 } from '@mui/material';
 import usePagination from '../../hooks/usePagination';
 import Unicorn from '../../ui/Unicorn';
 import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.secondary.dark,
-    color: theme.palette.secondary.contrastText,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
+import StyledTableCell from '../../ui/giget/StyledTableCell';
+import StyledTableRow from '../../ui/giget/StyledTableRow';
 
 const columns = ['編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
-const initialRowsPerPage = 5;
+const initialRowsPerPage = 10;
 
 function createData(
-  id: number,
+  id: string,
   name: string,
   status: string,
   startTime: string,
@@ -51,14 +33,14 @@ function createData(
 }
 
 const rows = [
-  createData(1, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(2, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(3, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(4, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(5, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(6, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(7, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData(8, '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('1', '測試畫面1', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('2', '測試畫面2', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('3', '測試畫面3', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('4', '測試畫面4', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('5', '測試畫面5', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('6', '測試畫面6', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('7', '測試畫面7', '進行中', '2024/11/5', '2024/11/6', '前往'),
+  createData('8', '測試畫面8', '進行中', '2024/11/5', '2024/11/6', '前往'),
 ];
 
 export default function QuestionList() {
@@ -76,11 +58,13 @@ export default function QuestionList() {
     handleStartDateChange,
     handleEndDateChange,
     handleSearchSubmit,
-  } = useSearch();
+    filteredRows,
+  } = useSearch(rows);
 
+  // 用篩選後的資料進行分頁
   const visibleRows = useMemo(
-    () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [page, rowsPerPage]
+    () => [...filteredRows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [page, rowsPerPage, filteredRows]
   );
 
   return (

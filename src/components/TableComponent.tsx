@@ -1,35 +1,16 @@
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import StyledTableRow from '../ui/giget/StyledTableRow';
+import StyledTableCell from '../ui/giget/StyledTableCell';
 
 type TableComponentProps = {
   columns: string[];
   rows: any[];
   emptyRows: number;
 };
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.secondary.dark,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
 const TableComponent: React.FC<TableComponentProps> = ({ columns, rows, emptyRows }) => {
   return (
