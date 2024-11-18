@@ -45,7 +45,7 @@ const data = [
   createData('8', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
 ];
 
-export default function QuestionList() {
+export default function SurveyList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const [rows, setRows] = useState(data);
@@ -118,7 +118,7 @@ export default function QuestionList() {
         <AddIcon
           sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
           onClick={() => {
-            navigate('/');
+            navigate('/backstage/panel/survey');
           }}
         />
       </Box>
