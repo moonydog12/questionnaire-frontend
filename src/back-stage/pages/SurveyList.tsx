@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   TablePagination,
@@ -12,6 +12,7 @@ import {
   Checkbox,
   TableCell,
 } from '@mui/material';
+import { Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
 import usePagination from '../../hooks/usePagination';
 import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
@@ -33,7 +34,7 @@ function createData(
   return { id, name, status, startTime, endTime, result };
 }
 
-const rows = [
+const data = [
   createData('1', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
   createData('2', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
   createData('3', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
@@ -46,6 +47,10 @@ const rows = [
 
 export default function QuestionList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const [rows, setRows] = useState(data);
+
+  const navigate = useNavigate();
 
   const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
     initialPage,
@@ -100,6 +105,23 @@ export default function QuestionList() {
         onEndDateChange={handleEndDateChange}
         onSubmit={handleSearchSubmit}
       />
+
+      <Box>
+        <DeleteIcon
+          sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
+          onClick={() => {
+            const updatedRows = rows.filter((row) => !selectedRows.includes(row.id));
+            setRows(updatedRows);
+            setSelectedRows([]);
+          }}
+        />
+        <AddIcon
+          sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
+          onClick={() => {
+            navigate('/');
+          }}
+        />
+      </Box>
 
       <TableContainer component={Paper}>
         <Table aria-label="customized table">

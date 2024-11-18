@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 
 interface UseSearchReturn {
   searchQuery: string;
@@ -25,6 +25,10 @@ export default function useSearch(rows: IData[]): UseSearchReturn {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [filteredRows, setFilteredRows] = useState(rows);
+
+  useEffect(() => {
+    setFilteredRows(rows);
+  }, [rows]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
