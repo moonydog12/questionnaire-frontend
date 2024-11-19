@@ -1,7 +1,7 @@
 import { Survey } from './interface';
 
 export const data: Survey = {
-  title: '獨角獸是世界上最美的動物',
+  title: 'Unicorn Lover',
   description:
     '歡迎來到奇幻生物問卷！這份問卷旨在探索您對奇幻生物的喜好、想像與偏好。無論您是否是奇幻愛好者，您的回答都將幫助我們了解大家對這些神秘生物的看法。感謝您的參與！',
   questions: [

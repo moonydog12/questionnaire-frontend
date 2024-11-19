@@ -1,9 +1,11 @@
 // TODO:新增問卷頁
 
+import { Typography } from "@mui/material";
+
 export default function TabSurvey() {
   return (
     <div>
-      <h2>test</h2>
+      <Typography>test</Typography>
     </div>
   );
 }

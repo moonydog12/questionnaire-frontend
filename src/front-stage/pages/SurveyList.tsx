@@ -69,7 +69,21 @@ export default function QuestionList() {
 
   return (
     <>
-      <Unicorn />
+      <Unicorn
+        imgSrc="/src/assets/unicorn-left.png"
+        sx={{ position: 'absolute', top: '5rem', left: 0, zIndex: -1 }}
+      />
+
+      <Unicorn
+        imgSrc="/src/assets/unicorn-left.png"
+        sx={{
+          position: 'absolute',
+          top: '5rem',
+          right: 0,
+          zIndex: -1,
+          transform: 'rotateY(180deg)',
+        }}
+      />
 
       <SearchBar
         searchQuery={searchQuery}

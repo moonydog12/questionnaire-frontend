@@ -18,6 +18,7 @@ import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
+import Unicorn from '../../ui/Unicorn';
 
 const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
@@ -84,17 +85,15 @@ export default function SurveyList() {
 
   return (
     <>
-      <Box
+      <Unicorn
+        imgSrc="/src/assets/unicorn-admin.png"
         sx={{
           position: 'absolute',
           top: '5rem',
-          left: 0,
+          right: 0,
           zIndex: -1,
-          transform: 'rotateY(180deg)',
         }}
-      >
-        <img src="/src/assets/unicorn-admin.png" alt="Unicorn" style={{ width: '25rem' }} />
-      </Box>
+      />
 
       <SearchBar
         searchQuery={searchQuery}

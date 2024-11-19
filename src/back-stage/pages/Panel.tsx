@@ -5,6 +5,7 @@ import TabSurvey from './TabSurvey';
 import TabFeedback from './TabFeedback';
 import TabStatistics from './TabStatistics';
 import TabQuestions from './TabQuestions';
+import Unicorn from '../../ui/Unicorn';
 
 interface StyledTabsProps extends TabsProps {
   children?: React.ReactNode;
@@ -72,6 +73,16 @@ export default function Panel() {
 
   return (
     <Box>
+      <Unicorn
+        imgSrc="/src/assets/unicorn-question.png"
+        sx={{
+          position: 'absolute',
+          right: 0,
+          zIndex: -1,
+          bottom: 0,
+          transform: 'rotateY(180deg)',
+        }}
+      />
       <Paper>
         <StyledTabs
           value={currentTab}
