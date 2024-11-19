@@ -1,26 +1,18 @@
 import { useState, FormEvent, useEffect } from 'react';
+import { Survey } from '../front-stage/context/SurveyQuestion/interface';
 
 interface UseSearchReturn {
   searchQuery: string;
   startDate: Date | null;
   endDate: Date | null;
-  filteredRows: IData[];
+  filteredRows: Survey[];
   handleSearchChange: (query: string) => void;
   handleStartDateChange: (date: Date | null) => void;
   handleEndDateChange: (date: Date | null) => void;
   handleSearchSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-interface IData {
-  id: string;
-  name: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  result: string;
-}
-
-export default function useSearch(rows: IData[]): UseSearchReturn {
+export default function useSearch(rows: Survey[]): UseSearchReturn {
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -45,9 +37,9 @@ export default function useSearch(rows: IData[]): UseSearchReturn {
   const handleSearchSubmit = (event: FormEvent) => {
     event.preventDefault();
     const filtered = rows.filter((row) => {
-      const matchesQuery = row.name.includes(searchQuery);
-      const matchesStartDate = startDate ? new Date(row.startTime) >= startDate : true;
-      const matchesEndDate = endDate ? new Date(row.endTime) <= endDate : true;
+      const matchesQuery = row.title.includes(searchQuery);
+      const matchesStartDate = startDate ? new Date(row.startDate) >= startDate : true;
+      const matchesEndDate = endDate ? new Date(row.endDate) <= endDate : true;
       return matchesQuery && matchesStartDate && matchesEndDate;
     });
 

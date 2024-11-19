@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -19,37 +19,18 @@ import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
 import Unicorn from '../../ui/Unicorn';
+import { SurveyQuestionsContext } from '../../front-stage/context/SurveyQuestion/SurveyQuestionContext';
 
 const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
 const initialRowsPerPage = 10;
 
-function createData(
-  id: string,
-  name: string,
-  status: string,
-  startTime: string,
-  endTime: string,
-  result: string
-) {
-  return { id, name, status, startTime, endTime, result };
-}
-
-const data = [
-  createData('1', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('2', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('3', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('4', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('5', '測試畫面5', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('6', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('7', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('8', '測試畫面', '進行中', '2024/11/5', '2024/11/6', '前往'),
-];
-
 export default function SurveyList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const [rows, setRows] = useState(data);
+  const { survey } = useContext(SurveyQuestionsContext);
+
+  const [rows, setRows] = useState(survey);
 
   const navigate = useNavigate();
 
@@ -68,7 +49,7 @@ export default function SurveyList() {
     handleEndDateChange,
     handleSearchSubmit,
     filteredRows,
-  } = useSearch(rows);
+  } = useSearch(survey);
 
   const visibleRows = useMemo(
     () => [...filteredRows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -109,8 +90,12 @@ export default function SurveyList() {
         <DeleteIcon
           sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
           onClick={() => {
-            const updatedRows = rows.filter((row) => !selectedRows.includes(row.id));
-            setRows(updatedRows);
+            const updatedRows = rows.filter((row) => {
+              return !selectedRows.includes(row.id);
+            });
+            console.log(updatedRows);
+
+            setRows([]);
             setSelectedRows([]);
           }}
         />
@@ -126,9 +111,9 @@ export default function SurveyList() {
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell padding="checkbox"></StyledTableCell>
+              <StyledTableCell padding="checkbox" align="left"></StyledTableCell>
               {columns.slice(1).map((column) => (
-                <StyledTableCell align="right" key={column}>
+                <StyledTableCell align="left" key={column}>
                   {column}
                 </StyledTableCell>
               ))}
@@ -143,15 +128,19 @@ export default function SurveyList() {
                     onChange={() => handleSelectRow(row.id)}
                   />
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.id}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <Link to={'/question'}>{row.name}</Link>
+                <StyledTableCell align="left">{row.id}</StyledTableCell>
+                <StyledTableCell align="left">
+                  <Link to={'/question'}>{row.title}</Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.status}</StyledTableCell>
-                <StyledTableCell align="right">{row.startTime}</StyledTableCell>
-                <StyledTableCell align="right">{row.endTime}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <Link to={'/result'}>{row.result}</Link>
+                <StyledTableCell align="left">{row.status}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {new Date(row.startDate).toLocaleDateString()}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {new Date(row.endDate).toLocaleDateString()}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  <Link to={'/result'}>結果</Link>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

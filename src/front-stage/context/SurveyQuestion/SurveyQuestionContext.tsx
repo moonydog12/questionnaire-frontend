@@ -3,15 +3,11 @@ import { Survey } from './interface';
 import { data } from './fakedata';
 
 interface SurveyQuestionsContextType {
-  survey: Survey;
+  survey: Survey[];
 }
 
 export const SurveyQuestionsContext = createContext<SurveyQuestionsContextType>({
-  survey: {
-    title: '',
-    description: '',
-    questions: [],
-  },
+  survey: [],
 });
 
 export function SurveyQuestionsProvider({ children }: { children: ReactNode }) {

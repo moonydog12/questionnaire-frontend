@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   TablePagination,
@@ -16,38 +16,19 @@ import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
+import { SurveyQuestionsContext } from '../context/SurveyQuestion/SurveyQuestionContext';
 
-const columns = ['編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
+const columns = ['名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
 const initialRowsPerPage = 10;
 
-function createData(
-  id: string,
-  name: string,
-  status: string,
-  startTime: string,
-  endTime: string,
-  result: string
-) {
-  return { id, name, status, startTime, endTime, result };
-}
-
-const rows = [
-  createData('1', '測試畫面1', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('2', '測試畫面2', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('3', '測試畫面3', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('4', '測試畫面4', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('5', '測試畫面5', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('6', '測試畫面6', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('7', '測試畫面7', '進行中', '2024/11/5', '2024/11/6', '前往'),
-  createData('8', '測試畫面8', '進行中', '2024/11/5', '2024/11/6', '前往'),
-];
-
 export default function QuestionList() {
+  const { survey } = useContext(SurveyQuestionsContext);
+
   const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
     initialPage,
     initialRowsPerPage,
-    rows.length
+    survey.length
   );
 
   const {
@@ -59,7 +40,7 @@ export default function QuestionList() {
     handleEndDateChange,
     handleSearchSubmit,
     filteredRows,
-  } = useSearch(rows);
+  } = useSearch(survey);
 
   // 用篩選後的資料進行分頁
   const visibleRows = useMemo(
@@ -95,6 +76,7 @@ export default function QuestionList() {
         onSubmit={handleSearchSubmit}
       />
 
+      {/* FIXME: 表格跑版 */}
       <TableContainer component={Paper}>
         <Table aria-label="customized table">
           <TableHead>
@@ -109,15 +91,18 @@ export default function QuestionList() {
           <TableBody>
             {visibleRows.map((row) => (
               <StyledTableRow key={row.id}>
-                <StyledTableCell align="right">{row.id}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <Link to={'/question'}>{row.name}</Link>
+                <StyledTableCell align="left">
+                  <Link to={'/question'}>{row.title}</Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.status}</StyledTableCell>
-                <StyledTableCell align="right">{row.startTime}</StyledTableCell>
-                <StyledTableCell align="right">{row.endTime}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <Link to={'/result'}>{row.result}</Link>
+                <StyledTableCell align="left">{row.status}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {new Date(row.startDate).toLocaleDateString()}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {new Date(row.endDate).toLocaleDateString()}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  <Link to={'/result'}>結果</Link>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
@@ -138,7 +123,7 @@ export default function QuestionList() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={rows.length}
+        count={survey.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

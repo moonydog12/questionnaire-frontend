@@ -8,6 +8,10 @@ interface SurveyQuestion {
 
 // 定義問卷的型別
 export interface Survey {
+  id: string;
+  startDate: Date;
+  endDate: string;
+  status: string;
   title: string;
   description: string;
   questions: SurveyQuestion[];
