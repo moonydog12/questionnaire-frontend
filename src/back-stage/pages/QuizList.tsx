@@ -25,7 +25,7 @@ const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束
 const initialPage = 0;
 const initialRowsPerPage = 10;
 
-export default function SurveyList() {
+export default function QuizList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const { survey } = useContext(SurveyQuestionsContext);
@@ -90,11 +90,6 @@ export default function SurveyList() {
         <DeleteIcon
           sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
           onClick={() => {
-            const updatedRows = rows.filter((row) => {
-              return !selectedRows.includes(row.id);
-            });
-            console.log(updatedRows);
-
             setRows([]);
             setSelectedRows([]);
           }}

@@ -5,7 +5,7 @@ import SurveyList from './front-stage/pages/SurveyList';
 import SurveyQuestion from './front-stage/pages/SurveyQuestion';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import SurveyResult from './front-stage/pages/SurveyResult';
-import BackStageSurveyList from './back-stage/pages/SurveyList';
+import BackStageSurveyList from './back-stage/pages/QuizList';
 import Panel from './back-stage/pages/Panel';
 
 const router = createBrowserRouter([
