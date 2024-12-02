@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { TextField, Typography, Box, Grid2 as Grid, Button } from '@mui/material';
+import { QuizDataContext } from '../context/QuizDataContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function TabSurvey() {
   const [surveyName, setSurveyName] = useState('');
@@ -7,17 +9,25 @@ export default function TabSurvey() {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
 
+  const { dispatch } = useContext(QuizDataContext);
+
+  const navigate = useNavigate();
+
   const handleSubmit = () => {
-    console.log({
-      surveyName,
-      surveyDescription,
-      startTime: startTime,
-      endTime: endTime,
-    });
+    if (!surveyName || !startTime || !endTime) {
+      alert('請填寫完整問卷資訊');
+      return;
+    }
+    dispatch({ type: 'SET_NAME', payload: surveyName });
+    dispatch({ type: 'SET_DESCRIPTION', payload: surveyDescription });
+    dispatch({ type: 'SET_START_DATE', payload: startTime });
+    dispatch({ type: 'SET_END_DATE', payload: endTime });
+
+    navigate('../questions');
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: '600px', margin: '0 auto' }}>
+    <Box sx={{ p: 3, maxWidth: '60%', margin: '0 auto' }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
         新增問卷
       </Typography>
@@ -69,7 +79,7 @@ export default function TabSurvey() {
         {/* 提交按鈕 */}
         <Grid size={12} sx={{ mt: 2 }}>
           <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
-            提交問卷
+            下一步
           </Button>
         </Grid>
       </Grid>

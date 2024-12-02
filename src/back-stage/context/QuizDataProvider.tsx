@@ -14,7 +14,7 @@ export type QuizAction =
 function quizReducer(state: QuizData, action: QuizAction) {
   switch (action.type) {
     case 'SET_NAME':
-      return { ...state, title: action.payload };
+      return { ...state, name: action.payload };
     case 'SET_DESCRIPTION':
       return { ...state, description: action.payload };
     case 'SET_START_DATE':

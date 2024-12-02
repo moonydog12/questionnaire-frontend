@@ -7,6 +7,10 @@ import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import SurveyResult from './front-stage/pages/SurveyResult';
 import BackStageSurveyList from './back-stage/pages/QuizList';
 import Panel from './back-stage/pages/Panel';
+import TabSurvey from './back-stage/pages/TabSurvey';
+import TabQuestions from './back-stage/pages/TabQuestions';
+import TabFeedback from './back-stage/pages/TabFeedback';
+import TabStatistics from './back-stage/pages/TabStatistics';
 
 const router = createBrowserRouter([
   {
@@ -37,21 +41,25 @@ const router = createBrowserRouter([
             element: <BackStageSurveyList />,
           },
           {
-            path: 'panel',
+            path: 'panel/*',
             element: <Panel />,
             children: [
               { index: true, element: <Navigate to="survey" /> },
               {
                 path: 'survey',
+                element: <TabSurvey />,
               },
               {
                 path: 'questions',
+                element: <TabQuestions />,
               },
               {
                 path: 'feedback',
+                element: <TabFeedback />,
               },
               {
                 path: 'statistics',
+                element: <TabStatistics />,
               },
             ],
           },

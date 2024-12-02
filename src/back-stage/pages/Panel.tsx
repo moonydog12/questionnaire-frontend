@@ -1,4 +1,3 @@
-import React, { useContext } from 'react';
 import { Box, Tab, Tabs, Paper, styled, TabsProps, TabProps } from '@mui/material';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import TabSurvey from './TabSurvey';
@@ -7,7 +6,6 @@ import TabStatistics from './TabStatistics';
 import TabQuestions from './TabQuestions';
 import Unicorn from '../../ui/Unicorn';
 import QuizDataProvider from '../context/QuizDataProvider';
-import { QuizDataContext } from '../context/QuizDataContext';
 
 interface StyledTabsProps extends TabsProps {
   children?: React.ReactNode;
@@ -68,8 +66,6 @@ export default function Panel() {
   const location = useLocation();
 
   const currentTab = location.pathname.split('/').pop() || 'survey';
-  const { quizData } = useContext(QuizDataContext);
-  console.log(quizData);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     navigate(`/backstage/panel/${newValue}`);
