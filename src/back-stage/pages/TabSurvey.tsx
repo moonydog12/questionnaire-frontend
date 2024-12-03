@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 export default function TabSurvey() {
   const [surveyName, setSurveyName] = useState('');
   const [surveyDescription, setSurveyDescription] = useState('');
-  const [startTime, setStartTime] = useState<Date | null>(null);
-  const [endTime, setEndTime] = useState<Date | null>(null);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [endTime, setEndTime] = useState<string | null>(null);
 
   const { dispatch } = useContext(QuizDataContext);
 
@@ -60,7 +60,9 @@ export default function TabSurvey() {
         <Grid size={6}>
           <TextField
             type="date"
-            onChange={(e) => setStartTime(new Date(e.target.value))}
+            onChange={(e) => {
+              setStartTime(e.target.value);
+            }}
             sx={{ width: 200 }}
             size="small"
           />
@@ -70,7 +72,9 @@ export default function TabSurvey() {
         <Grid size={6}>
           <TextField
             type="date"
-            onChange={(e) => setEndTime(new Date(e.target.value))}
+            onChange={(e) => {
+              setEndTime(e.target.value);
+            }}
             sx={{ width: 200 }}
             size="small"
           />

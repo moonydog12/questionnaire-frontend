@@ -15,37 +15,36 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Switch,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { Option } from '../interface/QuizDataInterface';
 
 export default function TabQuestions() {
   const { dispatch, quizData } = useContext(QuizDataContext);
+  const navigate = useNavigate();
 
   const [questionText, setQuestionText] = useState('');
-  const [questionType, setQuestionType] = useState<'text' | 'single' | 'multiple'>('text');
+  const [questionType, setQuestionType] = useState<'text' | 'single' | 'multi'>('text');
   const [options, setOptions] = useState<Option[]>([]);
+  const [required, setRequired] = useState(false);
 
   const handleAddOption = () => {
-    const newOption = {
-      optionNumber: options.length + 1,
-      option: '',
-    };
-    setOptions([...options, newOption]);
+    const nextOptionNumber = (options.length + 1).toString();
+    setOptions([...options, { optionName: '', optionNumber: nextOptionNumber }]);
   };
 
-  const handleRemoveOption = (index: number) => {
-    const newOptions = options
-      .filter((_, i) => i !== index)
-      .map((option, idx) => ({ ...option, optionNumber: idx + 1 })); // 更新序號
-    setOptions(newOptions);
+  const handleRemoveOption = (optionNumber: string) => {
+    setOptions(options.filter((opt) => opt.optionNumber !== optionNumber));
   };
 
-  const handleOptionChange = (index: number, value: string) => {
-    const newOptions = options.map((option, i) =>
-      i === index ? { ...option, option: value } : option
+  const handleOptionChange = (optionNumber: string, value: string) => {
+    setOptions(
+      options.map((opt) =>
+        opt.optionNumber === optionNumber ? { ...opt, optionName: value } : opt
+      )
     );
-    setOptions(newOptions);
   };
 
   const handleAddQuestion = () => {
@@ -55,25 +54,44 @@ export default function TabQuestions() {
     }
 
     const newQuestion = {
-      quesId: quizData.questions.length + 1, // 使用 index + 1 作為 quesId
+      quesId: String(quizData.quesList.length + 1),
+      quesName: questionText,
       type: questionType,
-      questionName: questionText,
-      options: questionType !== 'text' ? options : undefined,
+      required,
+      options: JSON.stringify(options),
     };
 
     dispatch({ type: 'ADD_QUESTION', payload: newQuestion });
-    console.log(quizData);
 
-    // 清空表單
     setQuestionText('');
     setQuestionType('text');
     setOptions([]);
+    setRequired(false);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/quiz/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quizData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      navigate('../../list');
+    } catch (error) {
+      // TODO: 改用彈出 modal 顯示錯誤
+      console.error('Request failed:', error);
+    }
   };
 
   return (
     <Box sx={{ p: 3, maxWidth: '800px', margin: '0 auto' }}>
       <Grid container spacing={2}>
-        {/* 問題內容 */}
         <Grid size={12}>
           <TextField
             fullWidth
@@ -84,36 +102,38 @@ export default function TabQuestions() {
           />
         </Grid>
 
-        {/* 問題類型 */}
         <Grid size={12}>
           <TextField
             select
             fullWidth
             label="題目類型"
             value={questionType}
-            onChange={(e) => setQuestionType(e.target.value as 'text' | 'single' | 'multiple')}
+            onChange={(e) => setQuestionType(e.target.value as 'text' | 'single' | 'multi')}
           >
             <MenuItem value="text">文字回答</MenuItem>
             <MenuItem value="single">單選</MenuItem>
-            <MenuItem value="multiple">多選</MenuItem>
+            <MenuItem value="multi">多選</MenuItem>
           </TextField>
         </Grid>
 
-        {/* 選項（僅單選、多選顯示） */}
         {questionType !== 'text' && (
           <Grid size={12}>
             <Typography variant="subtitle1" sx={{ mb: 1 }}>
               選項
             </Typography>
             {options.map((option, index) => (
-              <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <Box key={option.optionNumber} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <TextField
                   fullWidth
                   label={`選項 ${index + 1}`}
-                  value={option.option}
-                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                  value={option.optionName}
+                  onChange={(e) => handleOptionChange(option.optionNumber, e.target.value)}
                 />
-                <IconButton color="error" sx={{ ml: 1 }} onClick={() => handleRemoveOption(index)}>
+                <IconButton
+                  color="error"
+                  sx={{ ml: 1 }}
+                  onClick={() => handleRemoveOption(option.optionNumber)}
+                >
                   <Delete />
                 </IconButton>
               </Box>
@@ -124,15 +144,26 @@ export default function TabQuestions() {
           </Grid>
         )}
 
-        {/* 添加問題按鈕 */}
+        <Grid size={12} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+          <Typography sx={{ mr: 2 }}>此題是否必填：</Typography>
+          <Switch
+            checked={required}
+            onChange={(e) => setRequired(e.target.checked)}
+            color="primary"
+          />
+        </Grid>
+
         <Grid size={12} sx={{ mt: 2 }}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleAddQuestion}>
+          <Button variant="contained" color="primary" onClick={handleAddQuestion}>
             新增問題
+          </Button>
+
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
+            送出
           </Button>
         </Grid>
       </Grid>
 
-      {/* 問題列表 */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
           當前問題列表
@@ -148,16 +179,19 @@ export default function TabQuestions() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {quizData.questions.map((question) => (
+              {quizData.quesList?.map((question) => (
                 <TableRow key={question.quesId}>
                   <TableCell>{question.quesId}</TableCell>
-                  <TableCell>{question.questionName}</TableCell>
+                  <TableCell>{question.quesName}</TableCell>
                   <TableCell>{question.type}</TableCell>
                   <TableCell>
                     {question.options
-                      ? question.options
-                          .map((opt) => `(${opt.optionNumber}) ${opt.option}`)
-                          .join(' ')
+                      ? JSON.parse(question.options)
+                          .map(
+                            (option: { optionName: string; optionNumber: string }) =>
+                              `(${option.optionNumber}) ${option.optionName}`
+                          )
+                          .join(', ')
                       : '無'}
                   </TableCell>
                 </TableRow>

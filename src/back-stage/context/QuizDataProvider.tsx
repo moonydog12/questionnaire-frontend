@@ -5,8 +5,8 @@ import { QuizDataContext } from './QuizDataContext';
 export type QuizAction =
   | { type: 'SET_NAME'; payload: string }
   | { type: 'SET_DESCRIPTION'; payload: string }
-  | { type: 'SET_START_DATE'; payload: Date | null }
-  | { type: 'SET_END_DATE'; payload: Date | null }
+  | { type: 'SET_START_DATE'; payload: string | null }
+  | { type: 'SET_END_DATE'; payload: string | null }
   | { type: 'ADD_QUESTION'; payload: Question }
   | { type: 'UPDATE_QUESTION'; payload: { quesId: string; updatedQuestion: Partial<Question> } }
   | { type: 'REMOVE_QUESTION'; payload: string };
@@ -22,11 +22,11 @@ function quizReducer(state: QuizData, action: QuizAction) {
     case 'SET_END_DATE':
       return { ...state, endDate: action.payload };
     case 'ADD_QUESTION':
-      return { ...state, questions: [...state.questions, action.payload] };
+      return { ...state, quesList: [...state.quesList, action.payload] };
     case 'UPDATE_QUESTION':
       return {
         ...state,
-        questions: state.questions.map((question) =>
+        quesList: state.quesList.map((question) =>
           question.quesId === action.payload.quesId
             ? { ...question, ...action.payload.updatedQuestion }
             : question
@@ -35,7 +35,7 @@ function quizReducer(state: QuizData, action: QuizAction) {
     case 'REMOVE_QUESTION':
       return {
         ...state,
-        questions: state.questions.filter((question) => question.quesId !== action.payload),
+        quesList: state.quesList.filter((question) => question.quesId !== action.payload),
       };
     default:
       return state;
@@ -47,7 +47,7 @@ const initialState: QuizData = {
   description: '',
   startDate: null,
   endDate: null,
-  questions: [],
+  quesList: [],
 };
 
 export default function QuizDataProvider({ children }: { children: ReactNode }): JSX.Element {

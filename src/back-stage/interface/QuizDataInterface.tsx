@@ -1,21 +1,23 @@
 // 定義資料型別
 export interface Option {
-  optionNumber: number;
-  option: string;
+  optionName: string;
+  optionNumber: string;
 }
 
 export interface Question {
-  quizId: string;
+  quizId?: string;
   quesId: string;
-  type: 'text' | 'single' | 'multiple';
-  questionName: string;
-  options?: Option[];
+  quesName: string;
+  type: 'text' | 'single' | 'multi';
+  options?: string;
+  required: boolean;
 }
 
 export interface QuizData {
   name: string;
   description: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  questions: Question[];
+  startDate: string | null;
+  endDate: string | null;
+  quesList: Question[];
+  published?: boolean;
 }

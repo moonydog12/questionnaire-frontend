@@ -22,24 +22,6 @@ const columns = ['名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
 const initialRowsPerPage = 10;
 
-// 往後端送的格式
-const fakeData = {
-  name: '問卷2',
-  description: '測試問卷2',
-  endDate: '2024-12-08',
-  published: false,
-  quesList: [
-    {
-      quesId: 1,
-      quesName: '朴恩斌好正',
-      type: 'multi',
-      required: true,
-      options:
-        '[{"option":"小火龍","optionNumber":"1"},{"option":"狼人","optionNumber":"2"}, {"option":"南瓜怪人","optionNumber":"3"}]',
-    },
-  ],
-};
-
 export default function QuestionList() {
   const { survey } = useContext(SurveyQuestionsContext);
 
@@ -65,27 +47,6 @@ export default function QuestionList() {
     () => [...filteredRows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [page, rowsPerPage, filteredRows]
   );
-
-  const handleClick = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/quiz/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(fakeData),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-
-      const data = await res.json();
-      console.log(data);
-    } catch (error) {
-      console.error('Request failed:', error);
-    }
-  };
 
   return (
     <>
