@@ -19,7 +19,7 @@ import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
 import Unicorn from '../../ui/Unicorn';
-import { SurveyQuestionsContext } from '../../front-stage/context/SurveyQuestion/SurveyQuestionContext';
+import { SurveyQuestionsContext } from '../../context/SurveyQuestion/SurveyQuestionContext';
 
 const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { SurveyDataContext } from '../context/SurveyData/SurveyDataContext';
-import { SurveyQuestionsContext } from '../context/SurveyQuestion/SurveyQuestionContext';
+import { SurveyDataContext } from '../../context/SurveyData/SurveyDataContext';
+import { SurveyQuestionsContext } from '../../context/SurveyQuestion/SurveyQuestionContext';
 import {
   Paper,
   Typography,

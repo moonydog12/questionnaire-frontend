@@ -16,7 +16,7 @@ import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
-import { SurveyQuestionsContext } from '../context/SurveyQuestion/SurveyQuestionContext';
+import { SurveyQuestionsContext } from '../../context/SurveyQuestion/SurveyQuestionContext';
 
 const columns = ['名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;

@@ -1,6 +1,6 @@
 import { ReactNode, useReducer } from 'react';
-import { Question, QuizData } from '../interface/QuizDataInterface';
-import { QuizDataContext } from './QuizDataContext';
+import { Question, QuizData } from '../../back-stage/interface/QuizDataInterface';
+import { QuizDataContext } from './CreateUpdateContext';
 
 export type QuizAction =
   | { type: 'SET_NAME'; payload: string }

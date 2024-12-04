@@ -1,5 +1,5 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { Survey } from '../front-stage/context/SurveyQuestion/interface';
+import { Survey } from '../context/SurveyQuestion/interface';
 
 interface UseSearchReturn {
   searchQuery: string;

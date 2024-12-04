@@ -1,6 +1,6 @@
 import { createContext, Dispatch } from 'react';
-import { QuizData } from '../interface/QuizDataInterface';
-import { QuizAction } from './QuizDataProvider';
+import { QuizData } from '../../back-stage/interface/QuizDataInterface';
+import { QuizAction } from './CreateUpdateProvider';
 
 const initialQuizData: QuizData = {
   name: '',
