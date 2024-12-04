@@ -5,7 +5,7 @@ import TabFeedback from './TabFeedback';
 import TabStatistics from './TabStatistics';
 import TabQuestions from './TabQuestions';
 import Unicorn from '../../ui/Unicorn';
-import QuizDataProvider from '../../context/CreateUpdateContext/CreateUpdateProvider';
+import QuizDataProvider from '../../context/CreateUpdate/CreateUpdateProvider';
 
 interface StyledTabsProps extends TabsProps {
   children?: React.ReactNode;

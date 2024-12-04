@@ -11,10 +11,7 @@ import TabSurvey from './back-stage/pages/TabSurvey';
 import TabQuestions from './back-stage/pages/TabQuestions';
 import TabFeedback from './back-stage/pages/TabFeedback';
 import TabStatistics from './back-stage/pages/TabStatistics';
-import SurveyDataProvider from './context/SurveyData/SurveyDataProvider';
-import { SurveyQuestionsProvider } from './context/SurveyQuestion/SurveyQuestionContext';
-import { useEffect, useState } from 'react';
-import { SurveyData } from './context/SurveyData/interface';
+import { SearchResultProvider } from './context/SearchResult/SearchResultProvider';
 
 const router = createBrowserRouter([
   {
@@ -74,46 +71,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const [initialData, setInitialData] = useState<SurveyData | null>(null);
-
-  useEffect(() => {
-    async function fetchInitialData() {
-      try {
-        const response = await fetch('http://localhost:8080/quiz/search', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: '',
-            startDate: '',
-            endDate: '',
-          }),
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        setInitialData(data);
-      } catch (error) {
-        console.error('Failed to fetch survey data:', error);
-      }
-    }
-
-    fetchInitialData();
-  }, []);
-
-  console.log(initialData);
-
   return (
-    <>
-      <SurveyDataProvider initialData={initialData!}>
-        <SurveyQuestionsProvider>
-          <RouterProvider router={router} />
-        </SurveyQuestionsProvider>
-      </SurveyDataProvider>
-    </>
+    <SearchResultProvider>
+      <RouterProvider router={router} />
+    </SearchResultProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -19,7 +19,6 @@ import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
 import Unicorn from '../../ui/Unicorn';
-import { SurveyQuestionsContext } from '../../context/SurveyQuestion/SurveyQuestionContext';
 
 const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
@@ -28,17 +27,12 @@ const initialRowsPerPage = 10;
 export default function QuizList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const { survey } = useContext(SurveyQuestionsContext);
-
-  const [rows, setRows] = useState(survey);
-
   const navigate = useNavigate();
 
-  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
-    initialPage,
-    initialRowsPerPage,
-    rows.length
-  );
+  // 初次載入時獲取全部資料
+  useEffect(() => {
+    handleSearchSubmit();
+  }, []);
 
   const {
     searchQuery,
@@ -49,7 +43,13 @@ export default function QuizList() {
     handleEndDateChange,
     handleSearchSubmit,
     filteredRows,
-  } = useSearch(survey);
+  } = useSearch();
+
+  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
+    initialPage,
+    initialRowsPerPage,
+    filteredRows.length
+  );
 
   const visibleRows = useMemo(
     () => [...filteredRows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -89,9 +89,17 @@ export default function QuizList() {
       <Box>
         <DeleteIcon
           sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
-          onClick={() => {
-            setRows([]);
-            setSelectedRows([]);
+          onClick={async () => {
+            const res = await fetch('http://localhost:8080/quiz/delete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                quizIdList: [1],
+              }),
+            });
+            console.log(res);
           }}
         />
         <AddIcon
@@ -125,9 +133,9 @@ export default function QuizList() {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.id}</StyledTableCell>
                 <StyledTableCell align="left">
-                  <Link to={'/question'}>{row.title}</Link>
+                  <Link to={'/question'}>{row.name}</Link>
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.status}</StyledTableCell>
+                <StyledTableCell align="left">{row.published}</StyledTableCell>
                 <StyledTableCell align="left">
                   {new Date(row.startDate).toLocaleDateString()}
                 </StyledTableCell>
@@ -156,7 +164,7 @@ export default function QuizList() {
       <TablePagination
         rowsPerPageOptions={[10, 15, 20]}
         component="div"
-        count={rows.length}
+        count={filteredRows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

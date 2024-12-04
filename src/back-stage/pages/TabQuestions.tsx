@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { QuizDataContext } from '../../context/CreateUpdateContext/CreateUpdateContext';
+import { QuizDataContext } from '../../context/CreateUpdate/CreateUpdateContext';
 import {
   Box,
   Typography,
@@ -22,8 +22,8 @@ import { useNavigate } from 'react-router-dom';
 import { Option } from '../interface/QuizDataInterface';
 
 export default function TabQuestions() {
-  const { dispatch, quizData } = useContext(QuizDataContext);
   const navigate = useNavigate();
+  const { dispatch, quizData } = useContext(QuizDataContext);
 
   const [questionText, setQuestionText] = useState('');
   const [questionType, setQuestionType] = useState<'text' | 'single' | 'multi'>('text');
@@ -82,9 +82,9 @@ export default function TabQuestions() {
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);
       }
+
       navigate('../../list');
     } catch (error) {
-      // TODO: 改用彈出 modal 顯示錯誤
       console.error('Request failed:', error);
     }
   };

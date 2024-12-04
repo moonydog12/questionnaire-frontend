@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { TextField, Typography, Box, Grid2 as Grid, Button } from '@mui/material';
-import { QuizDataContext } from '../../context/CreateUpdateContext/CreateUpdateContext';
+import { QuizDataContext } from '../../context/CreateUpdate/CreateUpdateContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function TabSurvey() {

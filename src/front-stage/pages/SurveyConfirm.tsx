@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SurveyDataContext } from '../../context/SurveyData/SurveyDataContext';
+// import { SurveyDataContext } from '../../context/SearchResult/SurveyDataContext';
 import { SurveyQuestionsContext } from '../../context/SurveyQuestion/SurveyQuestionContext';
 import {
   Paper,
@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 export default function SurveyConfirm() {
-  const { surveyData } = useContext(SurveyDataContext);
+  // const { surveyData } = useContext(SurveyDataContext);
   const { survey } = useContext(SurveyQuestionsContext);
   const navigate = useNavigate();
 

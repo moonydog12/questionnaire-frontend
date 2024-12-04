@@ -1,49 +1,58 @@
-import { useState, FormEvent, useEffect } from 'react';
-import { Survey } from '../context/SurveyQuestion/interface';
+import { useState } from 'react';
+import { SearchResult } from '../context/SearchResult/interface';
 
 interface UseSearchReturn {
   searchQuery: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  filteredRows: Survey[];
+  startDate: string | null;
+  endDate: string | null;
+  filteredRows: SearchResult[];
   handleSearchChange: (query: string) => void;
-  handleStartDateChange: (date: Date | null) => void;
-  handleEndDateChange: (date: Date | null) => void;
-  handleSearchSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  handleStartDateChange: (date: string | null) => void;
+  handleEndDateChange: (date: string | null) => void;
+  handleSearchSubmit: () => Promise<void>; // 提交搜尋時使用 async
 }
 
-export default function useSearch(rows: Survey[]): UseSearchReturn {
+export default function useSearch(): UseSearchReturn {
   const [searchQuery, setSearchQuery] = useState('');
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [filteredRows, setFilteredRows] = useState(rows);
-
-  useEffect(() => {
-    setFilteredRows(rows);
-  }, [rows]);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [filteredRows, setFilteredRows] = useState<SearchResult[]>([]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
   };
 
-  const handleStartDateChange = (date: Date | null) => {
+  const handleStartDateChange = (date: string | null) => {
     setStartDate(date);
   };
 
-  const handleEndDateChange = (date: Date | null) => {
+  const handleEndDateChange = (date: string | null) => {
     setEndDate(date);
   };
 
-  const handleSearchSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    const filtered = rows.filter((row) => {
-      const matchesQuery = row.title.includes(searchQuery);
-      const matchesStartDate = startDate ? new Date(row.startDate) >= startDate : true;
-      const matchesEndDate = endDate ? new Date(row.endDate) <= endDate : true;
-      return matchesQuery && matchesStartDate && matchesEndDate;
-    });
+  const handleSearchSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/quiz/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: searchQuery,
+          startDate,
+          endDate,
+        }),
+      });
 
-    setFilteredRows(filtered);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setFilteredRows(data.quizList);
+    } catch (error) {
+      console.error('Failed to fetch search results:', error);
+    }
   };
 
   return {
