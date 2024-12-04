@@ -5,7 +5,7 @@ interface UseSearchReturn {
   searchQuery: string;
   startDate: string | null;
   endDate: string | null;
-  filteredRows: SearchResult[];
+  rows: SearchResult[];
   handleSearchChange: (query: string) => void;
   handleStartDateChange: (date: string | null) => void;
   handleEndDateChange: (date: string | null) => void;
@@ -16,7 +16,7 @@ export default function useSearch(): UseSearchReturn {
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const [filteredRows, setFilteredRows] = useState<SearchResult[]>([]);
+  const [rows, setRows] = useState<SearchResult[]>([]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -49,7 +49,7 @@ export default function useSearch(): UseSearchReturn {
       }
 
       const data = await response.json();
-      setFilteredRows(data.quizList);
+      setRows(data.quizList);
     } catch (error) {
       console.error('Failed to fetch search results:', error);
     }
@@ -59,7 +59,7 @@ export default function useSearch(): UseSearchReturn {
     searchQuery,
     startDate,
     endDate,
-    filteredRows,
+    rows,
     handleSearchChange,
     handleStartDateChange,
     handleEndDateChange,

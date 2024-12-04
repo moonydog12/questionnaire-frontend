@@ -42,18 +42,18 @@ export default function QuizList() {
     handleStartDateChange,
     handleEndDateChange,
     handleSearchSubmit,
-    filteredRows,
+    rows,
   } = useSearch();
 
   const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
     initialPage,
     initialRowsPerPage,
-    filteredRows.length
+    rows.length
   );
 
   const visibleRows = useMemo(
-    () => [...filteredRows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [page, rowsPerPage, filteredRows]
+    () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [page, rowsPerPage, rows]
   );
 
   const handleSelectRow = (id: string) => {
@@ -90,16 +90,23 @@ export default function QuizList() {
         <DeleteIcon
           sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
           onClick={async () => {
-            const res = await fetch('http://localhost:8080/quiz/delete', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                quizIdList: [1],
-              }),
-            });
-            console.log(res);
+            try {
+              await fetch('http://localhost:8080/quiz/delete', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  quizIdList: selectedRows,
+                }),
+              });
+
+              // 刪除成功後重新抓取資料
+              handleSearchSubmit();
+              setSelectedRows([]);
+            } catch (error) {
+              // TODO:modal顯示錯誤
+            }
           }}
         />
         <AddIcon
@@ -135,7 +142,9 @@ export default function QuizList() {
                 <StyledTableCell align="left">
                   <Link to={'/question'}>{row.name}</Link>
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.published}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.published ? '已發布' : '未發布'}
+                </StyledTableCell>
                 <StyledTableCell align="left">
                   {new Date(row.startDate).toLocaleDateString()}
                 </StyledTableCell>
@@ -164,7 +173,7 @@ export default function QuizList() {
       <TablePagination
         rowsPerPageOptions={[10, 15, 20]}
         component="div"
-        count={filteredRows.length}
+        count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

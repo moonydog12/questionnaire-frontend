@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import Layout from './ui/Layout';
 import NotFound from './ui/NotFound';
-import SurveyList from './front-stage/pages/SurveyList';
+import QuizList from './front-stage/pages/QuizList';
 import SurveyQuestion from './front-stage/pages/SurveyQuestion';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import SurveyResult from './front-stage/pages/SurveyResult';
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
 
     children: [
       { path: '/', element: <Navigate to={'list'} /> },
-      { path: '/list', element: <SurveyList /> },
+      { path: '/list', element: <QuizList /> },
       {
         path: '/question',
         element: <SurveyQuestion />,

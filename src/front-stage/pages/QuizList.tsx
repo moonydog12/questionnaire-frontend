@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   TablePagination,
@@ -16,20 +16,16 @@ import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/giget/StyledTableCell';
 import StyledTableRow from '../../ui/giget/StyledTableRow';
-import { SurveyQuestionsContext } from '../../context/SurveyQuestion/SurveyQuestionContext';
 
 const columns = ['名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
 const initialRowsPerPage = 10;
 
-export default function QuestionList() {
-  const { survey } = useContext(SurveyQuestionsContext);
-
-  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
-    initialPage,
-    initialRowsPerPage,
-    survey.length
-  );
+export default function QuizList() {
+  // 初次載入時獲取全部資料
+  useEffect(() => {
+    handleSearchSubmit();
+  }, []);
 
   const {
     searchQuery,
@@ -39,13 +35,19 @@ export default function QuestionList() {
     handleStartDateChange,
     handleEndDateChange,
     handleSearchSubmit,
-    filteredRows,
-  } = useSearch(survey);
+    rows,
+  } = useSearch();
+
+  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, emptyRows } = usePagination(
+    initialPage,
+    initialRowsPerPage,
+    rows.length
+  );
 
   // 用篩選後的資料進行分頁
   const visibleRows = useMemo(
-    () => [...filteredRows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [page, rowsPerPage, filteredRows]
+    () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [page, rowsPerPage, rows]
   );
 
   return (
@@ -82,7 +84,7 @@ export default function QuestionList() {
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <StyledTableCell align="right" key={column}>
+                <StyledTableCell align="left" key={column}>
                   {column}
                 </StyledTableCell>
               ))}
@@ -92,9 +94,11 @@ export default function QuestionList() {
             {visibleRows.map((row) => (
               <StyledTableRow key={row.id}>
                 <StyledTableCell align="left">
-                  <Link to={'/question'}>{row.title}</Link>
+                  <Link to={'/question'}>{row.name}</Link>
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.status}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.published ? '已發布' : '未發布'}
+                </StyledTableCell>
                 <StyledTableCell align="left">
                   {new Date(row.startDate).toLocaleDateString()}
                 </StyledTableCell>
@@ -123,7 +127,7 @@ export default function QuestionList() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={survey.length}
+        count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
