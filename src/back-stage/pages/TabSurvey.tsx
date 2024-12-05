@@ -1,30 +1,56 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { TextField, Typography, Box, Grid2 as Grid, Button } from '@mui/material';
-import { CreateUpdateQuizContext } from '../../context/CreateUpdate/CreateUpdateQuizContext';
+import { QuizContext } from '../../context/CreateUpdate/QuizContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function TabSurvey() {
-  const [surveyName, setSurveyName] = useState('');
-  const [surveyDescription, setSurveyDescription] = useState('');
-  const [startTime, setStartTime] = useState<string | null>(null);
-  const [endTime, setEndTime] = useState<string | null>(null);
-
-  const { dispatch } = useContext(CreateUpdateQuizContext);
-
+  const { dispatch, quizData } = useContext(QuizContext);
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    if (!surveyName || !startTime || !endTime) {
+    if (!quizData.name || !quizData.startDate || !quizData.endDate) {
       alert('請填寫完整問卷資訊');
       return;
     }
-    dispatch({ type: 'SET_NAME', payload: surveyName });
-    dispatch({ type: 'SET_DESCRIPTION', payload: surveyDescription });
-    dispatch({ type: 'SET_START_DATE', payload: startTime });
-    dispatch({ type: 'SET_END_DATE', payload: endTime });
-
     navigate('../questions');
   };
+
+  useEffect(() => {
+    // 表示是新建問卷，不需要呼叫 API
+    if (!quizData.id) {
+      dispatch({ type: 'CLEAR_QUIZ_DATA' });
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/quiz/getone', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ quizId: quizData.id }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch quiz data');
+        }
+
+        const data = await response.json();
+        const { quiz } = data;
+
+        dispatch({ type: 'SET_NAME', payload: quiz.name });
+        dispatch({ type: 'SET_DESCRIPTION', payload: quiz.description });
+        dispatch({ type: 'SET_START_DATE', payload: quiz.startDate });
+        dispatch({ type: 'SET_END_DATE', payload: quiz.endDate });
+        console.log(quizData);
+      } catch (error) {
+        console.error('Error fetching quiz data:', error);
+      }
+    };
+
+    fetchData();
+  }, [quizData.id]); // 依賴 quizId 和 dispatch
 
   return (
     <Box sx={{ p: 3, maxWidth: '60%', margin: '0 auto' }}>
@@ -38,8 +64,8 @@ export default function TabSurvey() {
             fullWidth
             label="問卷名稱"
             variant="outlined"
-            value={surveyName}
-            onChange={(e) => setSurveyName(e.target.value)}
+            value={quizData.name}
+            onChange={(e) => dispatch({ type: 'SET_NAME', payload: e.target.value })}
           />
         </Grid>
 
@@ -51,20 +77,27 @@ export default function TabSurvey() {
             variant="outlined"
             multiline
             rows={4}
-            value={surveyDescription}
-            onChange={(e) => setSurveyDescription(e.target.value)}
+            value={quizData.description}
+            onChange={(e) => dispatch({ type: 'SET_DESCRIPTION', payload: e.target.value })}
           />
         </Grid>
 
-        {/* 啟始時間 */}
+        {/* 開始時間 */}
         <Grid size={6}>
           <TextField
             type="date"
-            onChange={(e) => {
-              setStartTime(e.target.value);
-            }}
+            onChange={(e) => dispatch({ type: 'SET_START_DATE', payload: e.target.value })}
             sx={{ width: 200 }}
             size="small"
+            value={quizData.startDate || ''}
+            slotProps={{
+              htmlInput: {
+                min: new Date().toISOString().split('T')[0],
+                max: new Date(new Date().setDate(new Date().getDate() + 10))
+                  .toISOString()
+                  .split('T')[0],
+              },
+            }}
           />
         </Grid>
 
@@ -72,15 +105,21 @@ export default function TabSurvey() {
         <Grid size={6}>
           <TextField
             type="date"
-            onChange={(e) => {
-              setEndTime(e.target.value);
-            }}
+            onChange={(e) => dispatch({ type: 'SET_END_DATE', payload: e.target.value })}
             sx={{ width: 200 }}
             size="small"
+            value={quizData.endDate || ''}
+            slotProps={{
+              htmlInput: {
+                min: new Date().toISOString().split('T')[0],
+                max: new Date(new Date().setDate(new Date().getDate() + 10))
+                  .toISOString()
+                  .split('T')[0],
+              },
+            }}
           />
         </Grid>
 
-        {/* 提交按鈕 */}
         <Grid size={12} sx={{ mt: 2 }}>
           <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
             下一步

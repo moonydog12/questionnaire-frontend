@@ -12,6 +12,7 @@ import TabQuestions from './back-stage/pages/TabQuestions';
 import TabFeedback from './back-stage/pages/TabFeedback';
 import TabStatistics from './back-stage/pages/TabStatistics';
 import { SearchResultProvider } from './context/SearchResult/SearchResultProvider';
+import QuizProvider from './context/CreateUpdate/QuizProvider';
 
 const router = createBrowserRouter([
   {
@@ -73,7 +74,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <SearchResultProvider>
-      <RouterProvider router={router} />
+      <QuizProvider>
+        <RouterProvider router={router} />
+      </QuizProvider>
     </SearchResultProvider>
   );
 }

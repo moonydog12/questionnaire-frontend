@@ -1,6 +1,6 @@
 import { ReactNode, useReducer } from 'react';
 import { Question, QuizData } from '../../back-stage/interface/QuizDataInterface';
-import { CreateUpdateQuizContext } from './CreateUpdateQuizContext';
+import { QuizContext } from './QuizContext';
 
 export type QuizAction =
   | { type: 'SET_NAME'; payload: string }
@@ -9,7 +9,9 @@ export type QuizAction =
   | { type: 'SET_END_DATE'; payload: string | null }
   | { type: 'ADD_QUESTION'; payload: Question }
   | { type: 'UPDATE_QUESTION'; payload: { quesId: string; updatedQuestion: Partial<Question> } }
-  | { type: 'REMOVE_QUESTION'; payload: string };
+  | { type: 'REMOVE_QUESTION'; payload: string }
+  | { type: 'SET_QUIZ_ID'; payload: string }
+  | { type: 'CLEAR_QUIZ_DATA' };
 
 function quizReducer(state: QuizData, action: QuizAction) {
   switch (action.type) {
@@ -23,6 +25,10 @@ function quizReducer(state: QuizData, action: QuizAction) {
       return { ...state, endDate: action.payload };
     case 'ADD_QUESTION':
       return { ...state, quesList: [...state.quesList, action.payload] };
+
+    // 用在編輯問卷，因為資料庫已經存在該筆 quiz
+    case 'SET_QUIZ_ID':
+      return { ...state, id: action.payload };
     case 'UPDATE_QUESTION':
       return {
         ...state,
@@ -37,12 +43,17 @@ function quizReducer(state: QuizData, action: QuizAction) {
         ...state,
         quesList: state.quesList.filter((question) => question.quesId !== action.payload),
       };
+
+    // 重設 state 為 initialState
+    case 'CLEAR_QUIZ_DATA':
+      return initialState;
     default:
       return state;
   }
 }
 
 const initialState: QuizData = {
+  id: '',
   name: '',
   description: '',
   startDate: null,
@@ -50,12 +61,8 @@ const initialState: QuizData = {
   quesList: [],
 };
 
-export default function QuizDataProvider({ children }: { children: ReactNode }): JSX.Element {
+export default function QuizProvider({ children }: { children: ReactNode }): JSX.Element {
   const [quizData, dispatch] = useReducer(quizReducer, initialState);
 
-  return (
-    <CreateUpdateQuizContext.Provider value={{ quizData, dispatch }}>
-      {children}
-    </CreateUpdateQuizContext.Provider>
-  );
+  return <QuizContext.Provider value={{ quizData, dispatch }}>{children}</QuizContext.Provider>;
 }

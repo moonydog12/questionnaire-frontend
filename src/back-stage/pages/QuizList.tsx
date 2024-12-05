@@ -19,7 +19,7 @@ import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/widgets/StyledTableCell';
 import StyledTableRow from '../../ui/widgets/StyledTableRow';
 import Unicorn from '../../ui/Unicorn';
-import { CreateUpdateQuizContext } from '../../context/CreateUpdate/CreateUpdateQuizContext';
+import { QuizContext } from '../../context/CreateUpdate/QuizContext';
 
 const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
@@ -27,7 +27,7 @@ const initialRowsPerPage = 10;
 
 export default function QuizList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const { dispatch } = useContext(CreateUpdateQuizContext);
+  const { dispatch } = useContext(QuizContext);
 
   const navigate = useNavigate();
 
@@ -114,6 +114,7 @@ export default function QuizList() {
         <AddIcon
           sx={{ cursor: 'pointer', color: 'secondary.dark', fontSize: '2rem' }}
           onClick={() => {
+            dispatch({ type: 'SET_QUIZ_ID', payload: '' });
             navigate('/backstage/panel/survey');
           }}
         />
@@ -142,7 +143,12 @@ export default function QuizList() {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.id}</StyledTableCell>
                 <StyledTableCell align="left">
-                  <Link to={'/question'} onClick={() => console.log(row.id)}>
+                  <Link
+                    to={'../panel/survey'}
+                    onClick={() => {
+                      dispatch({ type: 'SET_QUIZ_ID', payload: String(row.id) });
+                    }}
+                  >
                     {row.name}
                   </Link>
                 </StyledTableCell>

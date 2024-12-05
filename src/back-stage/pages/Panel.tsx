@@ -5,10 +5,8 @@ import TabFeedback from './TabFeedback';
 import TabStatistics from './TabStatistics';
 import TabQuestions from './TabQuestions';
 import Unicorn from '../../ui/Unicorn';
-import CreateUpdateQuizProvider from '../../context/CreateUpdate/CreateUpdateQuizProvider';
 import StyledTab from '../../ui/widgets/StyledTab';
 import StyledTabs from '../../ui/widgets/StyledTabs';
-import { useEffect } from 'react';
 
 export default function Panel() {
   const navigate = useNavigate();
@@ -20,60 +18,39 @@ export default function Panel() {
     navigate(`/backstage/panel/${newValue}`);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('http://localhost:8080/quiz/getone', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizId: 13,
-        }),
-      });
-
-      const data = await res.json();
-      console.log(data);
-    };
-
-    fetchData();
-  }, []);
-
   return (
-    <CreateUpdateQuizProvider>
-      <Box>
-        <Unicorn
-          imgSrc="/src/assets/unicorn-question.png"
-          sx={{
-            position: 'absolute',
-            right: 0,
-            zIndex: -1,
-            bottom: 0,
-            transform: 'rotateY(180deg)',
-          }}
-        />
-        <Paper>
-          <StyledTabs
-            value={currentTab}
-            onChange={handleTabChange}
-            sx={{ bgcolor: 'secondary.dark' }}
-          >
-            <StyledTab label="問卷" value="survey" selected={currentTab === 'survey'} />
-            <StyledTab label="題目" value="questions" selected={currentTab === 'questions'} />
-            <StyledTab label="回饋" value="feedback" selected={currentTab === 'feedback'} />
-            <StyledTab label="統計" value="statistics" selected={currentTab === 'statistics'} />
-          </StyledTabs>
-        </Paper>
+    <Box>
+      <Unicorn
+        imgSrc="/src/assets/unicorn-question.png"
+        sx={{
+          position: 'absolute',
+          right: 0,
+          zIndex: -1,
+          bottom: 0,
+          transform: 'rotateY(180deg)',
+        }}
+      />
+      <Paper>
+        <StyledTabs
+          value={currentTab}
+          onChange={handleTabChange}
+          sx={{ bgcolor: 'secondary.dark' }}
+        >
+          <StyledTab label="問卷" value="survey" selected={currentTab === 'survey'} />
+          <StyledTab label="題目" value="questions" selected={currentTab === 'questions'} />
+          <StyledTab label="回饋" value="feedback" selected={currentTab === 'feedback'} />
+          <StyledTab label="統計" value="statistics" selected={currentTab === 'statistics'} />
+        </StyledTabs>
+      </Paper>
 
-        <Paper sx={{ minHeight: '80vh' }}>
-          <Routes>
-            <Route path="survey" element={<TabSurvey />} />
-            <Route path="questions" element={<TabQuestions />} />
-            <Route path="feedback" element={<TabFeedback />} />
-            <Route path="statistics" element={<TabStatistics />} />
-          </Routes>
-        </Paper>
-      </Box>
-    </CreateUpdateQuizProvider>
+      <Paper sx={{ minHeight: '80vh' }}>
+        <Routes>
+          <Route path="survey" element={<TabSurvey />} />
+          <Route path="questions" element={<TabQuestions />} />
+          <Route path="feedback" element={<TabFeedback />} />
+          <Route path="statistics" element={<TabStatistics />} />
+        </Routes>
+      </Paper>
+    </Box>
   );
 }
