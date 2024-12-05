@@ -1,6 +1,6 @@
 import { createContext, Dispatch } from 'react';
 import { QuizData } from '../../back-stage/interface/QuizDataInterface';
-import { QuizAction } from './CreateUpdateProvider';
+import { QuizAction } from './CreateUpdateQuizProvider';
 
 const initialQuizData: QuizData = {
   name: '',
@@ -12,7 +12,7 @@ const initialQuizData: QuizData = {
 };
 
 // 保存新增 / 修改問卷狀態
-export const QuizDataContext = createContext<{
+export const CreateUpdateQuizContext = createContext<{
   quizData: QuizData;
   dispatch: Dispatch<QuizAction>;
 }>({

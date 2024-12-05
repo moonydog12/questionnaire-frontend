@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { QuizDataContext } from '../../context/CreateUpdate/CreateUpdateContext';
+import { CreateUpdateQuizContext } from '../../context/CreateUpdate/CreateUpdateQuizContext';
 import {
   Box,
   Typography,
@@ -23,7 +23,7 @@ import { Option } from '../interface/QuizDataInterface';
 
 export default function TabQuestions() {
   const navigate = useNavigate();
-  const { dispatch, quizData } = useContext(QuizDataContext);
+  const { dispatch, quizData } = useContext(CreateUpdateQuizContext);
 
   const [questionText, setQuestionText] = useState('');
   const [questionType, setQuestionType] = useState<'text' | 'single' | 'multi'>('text');

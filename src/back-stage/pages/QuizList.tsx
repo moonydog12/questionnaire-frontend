@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -16,9 +16,10 @@ import { Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
 import usePagination from '../../hooks/usePagination';
 import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
-import StyledTableCell from '../../ui/giget/StyledTableCell';
-import StyledTableRow from '../../ui/giget/StyledTableRow';
+import StyledTableCell from '../../ui/widgets/StyledTableCell';
+import StyledTableRow from '../../ui/widgets/StyledTableRow';
 import Unicorn from '../../ui/Unicorn';
+import { CreateUpdateQuizContext } from '../../context/CreateUpdate/CreateUpdateQuizContext';
 
 const columns = ['選取', '編號', '名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
@@ -26,6 +27,7 @@ const initialRowsPerPage = 10;
 
 export default function QuizList() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const { dispatch } = useContext(CreateUpdateQuizContext);
 
   const navigate = useNavigate();
 
@@ -140,7 +142,9 @@ export default function QuizList() {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.id}</StyledTableCell>
                 <StyledTableCell align="left">
-                  <Link to={'/question'}>{row.name}</Link>
+                  <Link to={'/question'} onClick={() => console.log(row.id)}>
+                    {row.name}
+                  </Link>
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   {row.published ? '已發布' : '未發布'}

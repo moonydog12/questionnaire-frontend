@@ -3,8 +3,8 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import StyledTableRow from '../ui/giget/StyledTableRow';
-import StyledTableCell from '../ui/giget/StyledTableCell';
+import StyledTableRow from '../ui/widgets/StyledTableRow';
+import StyledTableCell from '../ui/widgets/StyledTableCell';
 
 type TableComponentProps = {
   columns: string[];

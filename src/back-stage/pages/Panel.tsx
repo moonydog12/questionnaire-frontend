@@ -1,65 +1,14 @@
-import { Box, Tab, Tabs, Paper, styled, TabsProps, TabProps } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import TabSurvey from './TabSurvey';
 import TabFeedback from './TabFeedback';
 import TabStatistics from './TabStatistics';
 import TabQuestions from './TabQuestions';
 import Unicorn from '../../ui/Unicorn';
-import QuizDataProvider from '../../context/CreateUpdate/CreateUpdateProvider';
-
-interface StyledTabsProps extends TabsProps {
-  children?: React.ReactNode;
-  value: string;
-  onChange: (_event: React.SyntheticEvent, newValue: string) => void;
-}
-
-interface StyledTabProps extends TabProps {
-  selected?: boolean;
-}
-
-const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs
-    {...props}
-    TabIndicatorProps={{
-      children: <span className="MuiTabs-indicatorSpan" />,
-    }}
-  />
-))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    maxWidth: 40,
-    width: '100%',
-    backgroundColor: '#f05a7e',
-  },
-});
-
-const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple {...props} />)(
-  ({ theme, selected }) => ({
-    color: selected ? theme.palette.common.white : theme.palette.grey[500],
-    backgroundColor: selected ? theme.palette.secondary.main : 'transparent',
-    '&:hover': {
-      color: selected ? theme.palette.common.white : theme.palette.grey[500],
-    },
-    '&:focus': {
-      color: selected ? theme.palette.common.white : theme.palette.grey[500],
-      outline: 'none',
-    },
-    '&.Mui-selected': {
-      color: theme.palette.common.white,
-    },
-    '&:not(.Mui-selected)': {
-      color: theme.palette.grey[500],
-    },
-    '&:active': {
-      color: selected ? theme.palette.common.white : theme.palette.grey[500],
-    },
-    transition: 'background-color 0.3s ease, color 0.3s ease',
-  })
-);
+import CreateUpdateQuizProvider from '../../context/CreateUpdate/CreateUpdateQuizProvider';
+import StyledTab from '../../ui/widgets/StyledTab';
+import StyledTabs from '../../ui/widgets/StyledTabs';
+import { useEffect } from 'react';
 
 export default function Panel() {
   const navigate = useNavigate();
@@ -71,8 +20,27 @@ export default function Panel() {
     navigate(`/backstage/panel/${newValue}`);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch('http://localhost:8080/quiz/getone', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quizId: 13,
+        }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <QuizDataProvider>
+    <CreateUpdateQuizProvider>
       <Box>
         <Unicorn
           imgSrc="/src/assets/unicorn-question.png"
@@ -106,6 +74,6 @@ export default function Panel() {
           </Routes>
         </Paper>
       </Box>
-    </QuizDataProvider>
+    </CreateUpdateQuizProvider>
   );
 }

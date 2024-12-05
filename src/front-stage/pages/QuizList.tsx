@@ -14,8 +14,8 @@ import usePagination from '../../hooks/usePagination';
 import Unicorn from '../../ui/Unicorn';
 import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
-import StyledTableCell from '../../ui/giget/StyledTableCell';
-import StyledTableRow from '../../ui/giget/StyledTableRow';
+import StyledTableCell from '../../ui/widgets/StyledTableCell';
+import StyledTableRow from '../../ui/widgets/StyledTableRow';
 
 const columns = ['名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;

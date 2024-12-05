@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { TextField, Typography, Box, Grid2 as Grid, Button } from '@mui/material';
-import { QuizDataContext } from '../../context/CreateUpdate/CreateUpdateContext';
+import { CreateUpdateQuizContext } from '../../context/CreateUpdate/CreateUpdateQuizContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function TabSurvey() {
@@ -9,7 +9,7 @@ export default function TabSurvey() {
   const [startTime, setStartTime] = useState<string | null>(null);
   const [endTime, setEndTime] = useState<string | null>(null);
 
-  const { dispatch } = useContext(QuizDataContext);
+  const { dispatch } = useContext(CreateUpdateQuizContext);
 
   const navigate = useNavigate();
 

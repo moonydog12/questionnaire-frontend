@@ -1,6 +1,6 @@
 import { ReactNode, useReducer } from 'react';
 import { Question, QuizData } from '../../back-stage/interface/QuizDataInterface';
-import { QuizDataContext } from './CreateUpdateContext';
+import { CreateUpdateQuizContext } from './CreateUpdateQuizContext';
 
 export type QuizAction =
   | { type: 'SET_NAME'; payload: string }
@@ -54,6 +54,8 @@ export default function QuizDataProvider({ children }: { children: ReactNode }):
   const [quizData, dispatch] = useReducer(quizReducer, initialState);
 
   return (
-    <QuizDataContext.Provider value={{ quizData, dispatch }}>{children}</QuizDataContext.Provider>
+    <CreateUpdateQuizContext.Provider value={{ quizData, dispatch }}>
+      {children}
+    </CreateUpdateQuizContext.Provider>
   );
 }
