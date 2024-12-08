@@ -41,6 +41,7 @@ export function SearchResultProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
         dispatch({ type: 'SET_RESULTS', payload: [...data.quizList] });
       } catch (error) {
+         // TODO:modal
         console.error('Failed to fetch survey data:', error);
       }
     }

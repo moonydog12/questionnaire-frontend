@@ -36,7 +36,12 @@ export default function TabQuestions() {
   };
 
   const handleRemoveOption = (optionNumber: string) => {
-    setOptions(options.filter((opt) => opt.optionNumber !== optionNumber));
+    // 重新排列 optionNumber
+    const updatedOptions = options
+      .filter((option) => option.optionNumber !== optionNumber)
+      .map((option, index) => ({ ...option, optionNumber: String(index + 1) }));
+
+    setOptions(updatedOptions);
   };
 
   const handleOptionChange = (optionNumber: string, value: string) => {
@@ -70,22 +75,27 @@ export default function TabQuestions() {
   };
 
   const handleSubmit = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/quiz/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(quizData),
-      });
+    if (!quizData.id) {
+      try {
+        const res = await fetch('http://localhost:8080/quiz/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(quizData),
+        });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        navigate('../../list');
+      } catch (error) {
+        // TODO:modal
+        console.error('Request failed:', error);
       }
-
-      navigate('../../list');
-    } catch (error) {
-      console.error('Request failed:', error);
+    }else{
+      alert("更新問卷")
     }
   };
 
@@ -179,7 +189,7 @@ export default function TabQuestions() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {quizData.quesList?.map((question) => (
+              {quizData.quesList.map((question) => (
                 <TableRow key={question.quesId}>
                   <TableCell>{question.quesId}</TableCell>
                   <TableCell>{question.quesName}</TableCell>

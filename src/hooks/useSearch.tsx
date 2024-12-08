@@ -51,6 +51,7 @@ export default function useSearch(): UseSearchReturn {
       const data = await response.json();
       setRows(data.quizList);
     } catch (error) {
+       // TODO:modal
       console.error('Failed to fetch search results:', error);
     }
   };

@@ -78,7 +78,6 @@ export default function QuizList() {
         onSubmit={handleSearchSubmit}
       />
 
-      {/* FIXME: 表格跑版 */}
       <TableContainer component={Paper}>
         <Table aria-label="customized table">
           <TableHead>

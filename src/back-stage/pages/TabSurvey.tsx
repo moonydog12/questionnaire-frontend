@@ -37,20 +37,22 @@ export default function TabSurvey() {
         }
 
         const data = await response.json();
-        const { quiz } = data;
+
+        const { quiz, ques } = data;
 
         dispatch({ type: 'SET_NAME', payload: quiz.name });
         dispatch({ type: 'SET_DESCRIPTION', payload: quiz.description });
         dispatch({ type: 'SET_START_DATE', payload: quiz.startDate });
         dispatch({ type: 'SET_END_DATE', payload: quiz.endDate });
-        console.log(quizData);
+        dispatch({ type: 'SET_QUESTION', payload: [...ques] });
       } catch (error) {
+        // TODO:modal
         console.error('Error fetching quiz data:', error);
       }
     };
 
     fetchData();
-  }, [quizData.id]); // 依賴 quizId 和 dispatch
+  }, [quizData.id]);
 
   return (
     <Box sx={{ p: 3, maxWidth: '60%', margin: '0 auto' }}>

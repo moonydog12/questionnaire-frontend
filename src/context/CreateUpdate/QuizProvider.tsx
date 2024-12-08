@@ -11,6 +11,7 @@ export type QuizAction =
   | { type: 'UPDATE_QUESTION'; payload: { quesId: string; updatedQuestion: Partial<Question> } }
   | { type: 'REMOVE_QUESTION'; payload: string }
   | { type: 'SET_QUIZ_ID'; payload: string }
+  | { type: 'SET_QUESTION'; payload: Question[] }
   | { type: 'CLEAR_QUIZ_DATA' };
 
 function quizReducer(state: QuizData, action: QuizAction) {
@@ -23,6 +24,8 @@ function quizReducer(state: QuizData, action: QuizAction) {
       return { ...state, startDate: action.payload };
     case 'SET_END_DATE':
       return { ...state, endDate: action.payload };
+    case 'SET_QUESTION':
+      return { ...state, quesList: action.payload };
     case 'ADD_QUESTION':
       return { ...state, quesList: [...state.quesList, action.payload] };
 
