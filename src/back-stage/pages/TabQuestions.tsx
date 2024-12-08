@@ -30,9 +30,12 @@ export default function TabQuestions() {
   const [options, setOptions] = useState<Option[]>([]);
   const [required, setRequired] = useState(false);
 
-  const handleAddOption = () => {
-    const nextOptionNumber = (options.length + 1).toString();
-    setOptions([...options, { optionName: '', optionNumber: nextOptionNumber }]);
+  const handleAddOption = (quesId: string) => {
+    const updatedQuestions = quizData.quesList
+      .filter((question) => question.quesId !== quesId)
+      .map((question, index) => ({ ...question, quesId: String(index) })); // 根據索引重設 ID
+
+    dispatch({ type: 'SET_QUESTIONS', payload: updatedQuestions });
   };
 
   const handleRemoveOption = (optionNumber: string) => {
