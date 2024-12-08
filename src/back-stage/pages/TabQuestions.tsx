@@ -75,6 +75,7 @@ export default function TabQuestions() {
   };
 
   const handleSubmit = async () => {
+    // 如果有沒有id就是新增問卷
     if (!quizData.id) {
       try {
         const res = await fetch('http://localhost:8080/quiz/create', {
@@ -94,8 +95,33 @@ export default function TabQuestions() {
         // TODO:modal
         console.error('Request failed:', error);
       }
-    }else{
-      alert("更新問卷")
+    } else {
+      // 如果有 id 就是更新問卷
+      alert('更新問卷');
+      try {
+        quizData.quesList.forEach((question) => {
+          if (!question.quizId) {
+            question.quizId = quizData.id;
+          }
+        });
+
+        const res = await fetch('http://localhost:8080/quiz/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(quizData),
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        navigate('../../list');
+      } catch (error) {
+        // TODO:modal
+        console.error('Request failed:', error);
+      }
     }
   };
 

@@ -14,7 +14,7 @@ export interface Question {
 }
 
 export interface QuizData {
-  id?: string | null;
+  id?: string;
   name: string;
   description: string;
   startDate: string | null;
