@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   TablePagination,
   TableBody,
@@ -16,12 +16,17 @@ import SearchBar from '../../components/SearchBar';
 import useSearch from '../../hooks/useSearch';
 import StyledTableCell from '../../ui/widgets/StyledTableCell';
 import StyledTableRow from '../../ui/widgets/StyledTableRow';
+import { FillInContext } from '../../context/FeedIn/FillInContext';
 
 const columns = ['名稱', '狀態', '開始時間', '結束時間', '結果'];
 const initialPage = 0;
 const initialRowsPerPage = 10;
 
 export default function QuizList() {
+  const { dispatch } = useContext(FillInContext);
+
+  const navigate = useNavigate();
+
   // 初次載入時獲取全部資料
   useEffect(() => {
     handleSearchSubmit();
@@ -93,7 +98,16 @@ export default function QuizList() {
             {visibleRows.map((row) => (
               <StyledTableRow key={row.id}>
                 <StyledTableCell align="left">
-                  <Link to={'/question'}>{row.name}</Link>
+                  <Link
+                    to={'/question'}
+                    onClick={() => {
+                      // 讓填答那一頁有quizId能夠用來撈資料
+                      dispatch({ type: 'SET_QUIZ_ID', payload: row.id });
+                      navigate('./question');
+                    }}
+                  >
+                    {row.name}
+                  </Link>
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   {row.published ? '已發布' : '未發布'}

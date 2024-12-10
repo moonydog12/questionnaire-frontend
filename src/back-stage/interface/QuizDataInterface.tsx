@@ -1,6 +1,6 @@
 // 定義資料型別
 export interface Option {
-  optionName: string;
+  option: string;
   optionNumber: string;
 }
 

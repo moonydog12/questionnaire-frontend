@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import Layout from './ui/Layout';
 import NotFound from './ui/NotFound';
 import QuizList from './front-stage/pages/QuizList';
-import SurveyQuestion from './front-stage/pages/SurveyQuestion';
+import Quiz from './front-stage/pages/Quiz';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import SurveyResult from './front-stage/pages/SurveyResult';
 import BackStageSurveyList from './back-stage/pages/QuizList';
@@ -13,6 +13,7 @@ import TabFeedback from './back-stage/pages/TabFeedback';
 import TabStatistics from './back-stage/pages/TabStatistics';
 import { SearchResultProvider } from './context/SearchResult/SearchResultProvider';
 import QuizProvider from './context/CreateUpdate/QuizProvider';
+import FillInProvider from './context/FeedIn/FillInProvider';
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
       { path: '/list', element: <QuizList /> },
       {
         path: '/question',
-        element: <SurveyQuestion />,
+        element: <Quiz />,
       },
       {
         path: '/confirm',
@@ -75,7 +76,9 @@ function App() {
   return (
     <SearchResultProvider>
       <QuizProvider>
-        <RouterProvider router={router} />
+        <FillInProvider>
+          <RouterProvider router={router} />
+        </FillInProvider>
       </QuizProvider>
     </SearchResultProvider>
   );

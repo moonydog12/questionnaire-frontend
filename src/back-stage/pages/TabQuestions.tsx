@@ -32,7 +32,7 @@ export default function TabQuestions() {
 
   const handleAddOption = () => {
     const nextOptionNumber = (options.length + 1).toString();
-    setOptions([...options, { optionName: '', optionNumber: nextOptionNumber }]);
+    setOptions([...options, { option: '', optionNumber: nextOptionNumber }]);
   };
 
   const handleRemoveOption = (optionNumber: string) => {
@@ -47,7 +47,7 @@ export default function TabQuestions() {
   const handleOptionChange = (optionNumber: string, value: string) => {
     setOptions(
       options.map((opt) =>
-        opt.optionNumber === optionNumber ? { ...opt, optionName: value } : opt
+        opt.optionNumber === optionNumber ? { ...opt, option: value } : opt
       )
     );
   };
@@ -97,7 +97,6 @@ export default function TabQuestions() {
       }
     } else {
       // 如果有 id 就是更新問卷
-      alert('更新問卷');
       try {
         quizData.quesList.forEach((question) => {
           if (!question.quizId) {
@@ -162,7 +161,7 @@ export default function TabQuestions() {
                 <TextField
                   fullWidth
                   label={`選項 ${index + 1}`}
-                  value={option.optionName}
+                  value={option.option}
                   onChange={(e) => handleOptionChange(option.optionNumber, e.target.value)}
                 />
                 <IconButton
@@ -224,8 +223,8 @@ export default function TabQuestions() {
                     {question.options
                       ? JSON.parse(question.options)
                           .map(
-                            (option: { optionName: string; optionNumber: string }) =>
-                              `(${option.optionNumber}) ${option.optionName}`
+                            (option: { option: string; optionNumber: string }) =>
+                              `(${option.optionNumber}) ${option.option}`
                           )
                           .join(', ')
                       : '無'}
