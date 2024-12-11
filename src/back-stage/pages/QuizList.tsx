@@ -162,7 +162,7 @@ export default function QuizList() {
                   {new Date(row.endDate).toLocaleDateString()}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  <Link to={'/result'}>結果</Link>
+                  <Link to={'/statistics'}>結果</Link>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

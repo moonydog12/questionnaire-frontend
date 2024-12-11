@@ -57,7 +57,7 @@ export default function TabSurvey() {
   return (
     <Box sx={{ p: 3, maxWidth: '60%', margin: '0 auto' }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
-        新增問卷
+        {!quizData.id ? '新增' : '編輯'}問卷
       </Typography>
       <Grid container spacing={2}>
         {/* 問卷名稱 */}

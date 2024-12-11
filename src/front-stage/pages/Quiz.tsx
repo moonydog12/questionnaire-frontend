@@ -110,12 +110,12 @@ export default function Quiz() {
       phone: fillInData.user.phone,
       email: fillInData.user.email,
       age: fillInData.user.age,
-      fillinDate: '2024-12-11', // 自動填入今天日期
+      fillinDate: '2024-12-14', // 自動填入今天日期
       answer: fillInData.answer,
     };
 
     try {
-      await fetch('http://localhost:8080/quiz/fillin', {
+      const res = await fetch('http://localhost:8080/quiz/fillin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fillinData),
@@ -133,7 +133,12 @@ export default function Quiz() {
   const { quiz, questions, answer } = fillInData;
 
   return (
-    <StyledContainer component={Paper} elevation={3}>
+    <Box
+      component={Paper}
+      sx={{
+        padding: (theme) => theme.spacing(5),
+      }}
+    >
       {/* 問卷標題 */}
       <Typography variant="h4" textAlign="center" gutterBottom>
         {quiz.name}
@@ -268,6 +273,6 @@ export default function Quiz() {
           送出
         </Button>
       </Box>
-    </StyledContainer>
+    </Box>
   );
 }

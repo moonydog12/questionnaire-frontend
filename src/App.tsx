@@ -4,7 +4,7 @@ import NotFound from './ui/NotFound';
 import QuizList from './front-stage/pages/QuizList';
 import Quiz from './front-stage/pages/Quiz';
 import SurveyConfirm from './front-stage/pages/SurveyConfirm';
-import SurveyResult from './front-stage/pages/SurveyResult';
+import Statistics from './front-stage/pages/Statistics';
 import BackStageSurveyList from './back-stage/pages/QuizList';
 import Panel from './back-stage/pages/Panel';
 import TabSurvey from './back-stage/pages/TabSurvey';
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
         element: <SurveyConfirm />,
       },
       {
-        path: '/result',
-        element: <SurveyResult />,
+        path: '/statistics',
+        element: <Statistics />,
       },
       {
         path: '/backstage',

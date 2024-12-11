@@ -103,7 +103,6 @@ export default function QuizList() {
                     onClick={() => {
                       // 讓填答那一頁有quizId能夠用來撈資料
                       dispatch({ type: 'SET_QUIZ_ID', payload: row.id });
-                      navigate('./question');
                     }}
                   >
                     {row.name}
@@ -119,7 +118,15 @@ export default function QuizList() {
                   {new Date(row.endDate).toLocaleDateString()}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  <Link to={'/result'}>結果</Link>
+                  <Link
+                    to={'/statistics'}
+                    onClick={() => {
+                      // 讓統計那一頁有quizId能夠用來撈資料
+                      dispatch({ type: 'SET_QUIZ_ID', payload: row.id });
+                    }}
+                  >
+                    統計
+                  </Link>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
