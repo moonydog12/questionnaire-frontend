@@ -14,6 +14,7 @@ import TabStatistics from './back-stage/pages/TabStatistics';
 import { SearchResultProvider } from './context/SearchResult/SearchResultProvider';
 import QuizProvider from './context/CreateUpdate/QuizProvider';
 import FillInProvider from './context/FeedIn/FillInProvider';
+import FeedbackDetails from './back-stage/pages/FeedbackDetails';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
           {
             path: 'list',
             element: <BackStageSurveyList />,
+          },
+          {
+            path: 'feedback/:email',
+            element: <FeedbackDetails />,
           },
           {
             path: 'panel/*',
