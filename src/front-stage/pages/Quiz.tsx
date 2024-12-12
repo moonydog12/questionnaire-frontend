@@ -14,10 +14,6 @@ import {
 import { FillInContext } from '../../context/FeedIn/FillInContext';
 import { useNavigate } from 'react-router-dom';
 
-const StyledContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(5),
-}));
-
 const StyledQuestionContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));

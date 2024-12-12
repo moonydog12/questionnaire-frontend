@@ -162,7 +162,15 @@ export default function QuizList() {
                   {new Date(row.endDate).toLocaleDateString()}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  <Link to={'/statistics'}>結果</Link>
+                  <Link
+                    to={'/statistics'}
+                    onClick={() => {
+                      // 讓統計那一頁有quizId能夠用來撈資料
+                      dispatch({ type: 'SET_QUIZ_ID', payload: row.id });
+                    }}
+                  >
+                    結果
+                  </Link>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

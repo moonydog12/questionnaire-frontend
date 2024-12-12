@@ -17,9 +17,16 @@ import {
   Paper,
   Switch,
 } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import { Add, Delete, Check, Edit } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { Option } from '../interface/QuizDataInterface';
+import { Option, Question } from '../interface/QuizDataInterface';
+
+// 把問題類型轉型成對應顯示
+function convertQuestionType(type: string) {
+  if (type === 'single') return '單選題';
+  if (type === 'multi') return '多選題';
+  return '文字題';
+}
 
 export default function TabQuestions() {
   const navigate = useNavigate();
@@ -29,14 +36,16 @@ export default function TabQuestions() {
   const [questionType, setQuestionType] = useState<'text' | 'single' | 'multi'>('text');
   const [options, setOptions] = useState<Option[]>([]);
   const [required, setRequired] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null); // Holds the question being edited
 
+  // 新增選項
   const handleAddOption = () => {
     const nextOptionNumber = (options.length + 1).toString();
     setOptions([...options, { option: '', optionNumber: nextOptionNumber }]);
   };
 
+  // 移除選項並重新排序
   const handleRemoveOption = (optionNumber: string) => {
-    // 重新排列 optionNumber
     const updatedOptions = options
       .filter((option) => option.optionNumber !== optionNumber)
       .map((option, index) => ({ ...option, optionNumber: String(index + 1) }));
@@ -44,39 +53,67 @@ export default function TabQuestions() {
     setOptions(updatedOptions);
   };
 
+  // 題目更新
   const handleOptionChange = (optionNumber: string, value: string) => {
     setOptions(
-      options.map((opt) =>
-        opt.optionNumber === optionNumber ? { ...opt, option: value } : opt
-      )
+      options.map((opt) => (opt.optionNumber === optionNumber ? { ...opt, option: value } : opt))
     );
   };
 
-  const handleAddQuestion = () => {
+  // 新增或儲存題目
+  const handleSaveQuestion = () => {
     if (!questionText) {
       alert('請填寫問題內容');
       return;
     }
 
-    const newQuestion = {
-      quesId: String(quizData.quesList.length + 1),
+    const updatedQuestion = {
+      quesId: editingQuestion ? editingQuestion.quesId : String(quizData.quesList.length + 1),
       quesName: questionText,
       type: questionType,
       required,
       options: JSON.stringify(options),
     };
 
-    dispatch({ type: 'ADD_QUESTION', payload: newQuestion });
+    if (editingQuestion) {
+      dispatch({
+        type: 'UPDATE_QUESTION',
+        payload: { quesId: editingQuestion.quesId, updatedQuestion: updatedQuestion },
+      });
+    } else {
+      dispatch({ type: 'ADD_QUESTION', payload: updatedQuestion });
+    }
 
+    // 儲存後重設狀態
+    setEditingQuestion(null);
     setQuestionText('');
     setQuestionType('text');
     setOptions([]);
     setRequired(false);
   };
 
+  // Handle editing a question
+  const handleEditQuestion = (question: Question) => {
+    setEditingQuestion({ ...question });
+    setQuestionText(question.quesName);
+    setQuestionType(question.type);
+    setOptions(question.type !== 'text' ? JSON.parse(question.options) : []);
+    setRequired(question.required);
+  };
+
+  // Cancel editing mode
+  const handleCancelEdit = () => {
+    setEditingQuestion(null);
+    setQuestionText('');
+    setQuestionType('text');
+    setOptions([]);
+    setRequired(false);
+  };
+
+  // Submit the entire quiz data (for creation or update)
   const handleSubmit = async () => {
-    // 如果有沒有id就是新增問卷
     if (!quizData.id) {
+      // Create new quiz
       try {
         const res = await fetch('http://localhost:8080/quiz/create', {
           method: 'POST',
@@ -92,11 +129,10 @@ export default function TabQuestions() {
 
         navigate('../../list');
       } catch (error) {
-        // TODO:modal
         console.error('Request failed:', error);
       }
     } else {
-      // 如果有 id 就是更新問卷
+      // Update existing quiz
       try {
         quizData.quesList.forEach((question) => {
           if (!question.quizId) {
@@ -118,7 +154,6 @@ export default function TabQuestions() {
 
         navigate('../../list');
       } catch (error) {
-        // TODO:modal
         console.error('Request failed:', error);
       }
     }
@@ -189,11 +224,27 @@ export default function TabQuestions() {
         </Grid>
 
         <Grid size={12} sx={{ mt: 2 }}>
-          <Button variant="contained" color="primary" onClick={handleAddQuestion}>
-            新增問題
-          </Button>
+          {editingQuestion ? (
+            <>
+              <Button variant="contained" color="primary" onClick={handleSaveQuestion}>
+                儲存變更
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleCancelEdit}
+                sx={{ ml: 2 }}
+              >
+                取消
+              </Button>
+            </>
+          ) : (
+            <Button variant="contained" color="primary" onClick={handleSaveQuestion}>
+              新增問題
+            </Button>
+          )}
 
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
+          <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ ml: 2 }}>
             送出
           </Button>
         </Grid>
@@ -207,27 +258,22 @@ export default function TabQuestions() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>題目 ID</TableCell>
                 <TableCell>題目名稱</TableCell>
                 <TableCell>題目類型</TableCell>
-                <TableCell>選項</TableCell>
+                <TableCell>必填</TableCell>
+                <TableCell>編輯</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {quizData.quesList.map((question) => (
                 <TableRow key={question.quesId}>
-                  <TableCell>{question.quesId}</TableCell>
                   <TableCell>{question.quesName}</TableCell>
-                  <TableCell>{question.type}</TableCell>
+                  <TableCell>{convertQuestionType(question.type)}</TableCell>
+                  <TableCell>{question.required ? <Check /> : ''}</TableCell>
                   <TableCell>
-                    {question.options
-                      ? JSON.parse(question.options)
-                          .map(
-                            (option: { option: string; optionNumber: string }) =>
-                              `(${option.optionNumber}) ${option.option}`
-                          )
-                          .join(', ')
-                      : '無'}
+                    <IconButton onClick={() => handleEditQuestion(question)}>
+                      <Edit />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

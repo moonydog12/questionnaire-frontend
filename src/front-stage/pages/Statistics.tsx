@@ -1,8 +1,9 @@
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useContext, useEffect, useState } from 'react';
 import { FillInContext } from '../../context/FeedIn/FillInContext';
-import { Box, Typography, Paper, styled } from '@mui/material';
+import { Box, Typography, Paper, styled, Button } from '@mui/material';
 import Unicorn from '../../ui/Unicorn';
+import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(5),
@@ -29,6 +30,7 @@ const palette = ['#a091bd', '#f8d1d5', '#fdefef', '#83d0e0', '#bb4b9f', '#facf9a
 export default function SurveyResult() {
   const { fillInData } = useContext(FillInContext);
   const [statistics, setStatistics] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,11 +53,18 @@ export default function SurveyResult() {
     return (
       <StyledContainer>
         <Typography variant="h4" textAlign="center" gutterBottom>
-          問卷統計結果
-        </Typography>
-        <Typography variant="h5" textAlign="center" gutterBottom>
           目前尚無統計資料
         </Typography>
+        <Button
+          sx={{ marginLeft: 'auto' }}
+          color="secondary"
+          variant="contained"
+          onClick={() => {
+            navigate('..');
+          }}
+        >
+          回上一頁
+        </Button>
         <Unicorn imgSrc="/src/assets/unicorn-enjoy.png" sx={{ textAlign: 'center' }} />
       </StyledContainer>
     );
@@ -66,7 +75,16 @@ export default function SurveyResult() {
       <Typography variant="h4" textAlign="center" gutterBottom>
         問卷統計結果
       </Typography>
-
+      <Button
+        sx={{ marginLeft: 'auto' }}
+        color="secondary"
+        variant="contained"
+        onClick={() => {
+          navigate('..');
+        }}
+      >
+        回上一頁
+      </Button>
       {statistics.map((question: Statistic) => {
         const totalVotes = Object.values(question.optionCountMap).reduce(
           (sum, value) => sum + value,
