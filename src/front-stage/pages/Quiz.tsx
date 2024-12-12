@@ -77,6 +77,8 @@ export default function Quiz() {
           type: 'SET_QUIZ_DATA',
           payload: { quiz: data.quiz, questions: data.ques },
         });
+
+        console.log(fillInData);
       } catch (error) {
         console.error('Failed to fetch quiz data:', error);
       }
@@ -97,33 +99,6 @@ export default function Quiz() {
       type: 'SET_USER',
       payload: { field, value },
     });
-  };
-
-  const handleSubmit = async () => {
-    const fillinData = {
-      quizId: quiz.id,
-      userName: fillInData.user.userName,
-      phone: fillInData.user.phone,
-      email: fillInData.user.email,
-      age: fillInData.user.age,
-      fillinDate: '2024-12-14', // 自動填入今天日期
-      answer: fillInData.answer,
-    };
-
-    try {
-      const res = await fetch('http://localhost:8080/quiz/fillin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fillinData),
-      });
-
-      // 填完之後清空 context 資料、跳轉畫面
-      dispatch({ type: 'CLEAR_DATA' });
-      navigate('../list');
-    } catch (error) {
-      console.error('Submission failed:', error);
-      alert('提交失敗！');
-    }
   };
 
   const { quiz, questions, answer } = fillInData;
@@ -243,14 +218,13 @@ export default function Quiz() {
             {/* 開放式文字題 */}
             {question.type === 'text' && (
               <TextField
-                fullWidth
                 multiline
                 rows={4}
                 variant="outlined"
                 value={answer[question.quesId]?.[0] || ''}
                 onChange={(e) => handleAnswerChange(question.quesId, e.target.value)}
                 placeholder="請輸入您的答案"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, width: '60%' }}
               />
             )}
           </StyledQuestionContainer>
@@ -261,12 +235,27 @@ export default function Quiz() {
       <Box textAlign="right" sx={{ mt: 4 }}>
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           size="large"
-          onClick={handleSubmit}
+          onClick={() => {
+            navigate('../list');
+            dispatch({ type: 'CLEAR_DATA' });
+          }}
+          sx={{ textTransform: 'none', px: 4, mr: 4 }}
+        >
+          取消
+        </Button>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          onClick={() => {
+            navigate('../confirm');
+          }}
           sx={{ textTransform: 'none', px: 4 }}
         >
-          送出
+          預覽
         </Button>
       </Box>
     </Box>

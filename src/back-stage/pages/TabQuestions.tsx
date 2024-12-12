@@ -110,52 +110,37 @@ export default function TabQuestions() {
     setRequired(false);
   };
 
-  // Submit the entire quiz data (for creation or update)
-  const handleSubmit = async () => {
-    if (!quizData.id) {
-      // Create new quiz
-      try {
-        const res = await fetch('http://localhost:8080/quiz/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(quizData),
-        });
+  const handleSubmit = async (published: boolean) => {
+    // 確保 quizData 是最新值
+    const updatedQuizData = { ...quizData }; // 複製當前 quizData 狀態
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-
-        navigate('../../list');
-      } catch (error) {
-        console.error('Request failed:', error);
+    updatedQuizData.published = published;
+    // 確保每個題目有 quizId
+    updatedQuizData.quesList.forEach((question) => {
+      if (!question.quizId) {
+        question.quizId = updatedQuizData.id;
       }
-    } else {
-      // Update existing quiz
-      try {
-        quizData.quesList.forEach((question) => {
-          if (!question.quizId) {
-            question.quizId = quizData.id;
-          }
-        });
+    });
 
-        const res = await fetch('http://localhost:8080/quiz/update', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(quizData),
-        });
+    try {
+      const url = updatedQuizData.id
+        ? 'http://localhost:8080/quiz/update'
+        : 'http://localhost:8080/quiz/create';
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedQuizData),
+      });
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-
-        navigate('../../list');
-      } catch (error) {
-        console.error('Request failed:', error);
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
       }
+
+      navigate('../../list');
+    } catch (error) {
+      console.error('Request failed:', error);
     }
   };
 
@@ -204,11 +189,17 @@ export default function TabQuestions() {
                   sx={{ ml: 1 }}
                   onClick={() => handleRemoveOption(option.optionNumber)}
                 >
-                  <Delete />
+                  <Delete sx={{ color: '#bb4b9f' }} />
                 </IconButton>
               </Box>
             ))}
-            <Button variant="outlined" startIcon={<Add />} onClick={handleAddOption} sx={{ mt: 1 }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<Add />}
+              onClick={handleAddOption}
+              sx={{ mt: 1 }}
+            >
               新增選項
             </Button>
           </Grid>
@@ -219,14 +210,14 @@ export default function TabQuestions() {
           <Switch
             checked={required}
             onChange={(e) => setRequired(e.target.checked)}
-            color="primary"
+            color="secondary"
           />
         </Grid>
 
         <Grid size={12} sx={{ mt: 2 }}>
           {editingQuestion ? (
             <>
-              <Button variant="contained" color="primary" onClick={handleSaveQuestion}>
+              <Button variant="outlined" color="secondary" onClick={handleSaveQuestion}>
                 儲存變更
               </Button>
               <Button
@@ -239,14 +230,34 @@ export default function TabQuestions() {
               </Button>
             </>
           ) : (
-            <Button variant="contained" color="primary" onClick={handleSaveQuestion}>
+            <Button variant="contained" color="secondary" onClick={handleSaveQuestion}>
               新增問題
             </Button>
           )}
 
-          <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ ml: 2 }}>
-            送出
-          </Button>
+          {!editingQuestion && (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ ml: 2 }}
+              onClick={async () => {
+                await handleSubmit(false); // 確保執行順序
+              }}
+            >
+              儲存
+            </Button>
+          )}
+          {!editingQuestion && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={async () => {
+                await handleSubmit(true); // 確保執行順序
+              }}
+            >
+              發布
+            </Button>
+          )}
         </Grid>
       </Grid>
 

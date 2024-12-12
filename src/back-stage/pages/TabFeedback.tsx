@@ -38,8 +38,6 @@ export default function TabFeedback() {
       const res = await fetch(`http://localhost:8080/quiz/feedback?quizId=${quizData.id}`);
       const { feedbackDtoList } = await res.json();
 
-      console.log(feedbackDtoList);
-
       // 使用 Map 來追蹤不重複使用者
       const userMap = new Map();
 

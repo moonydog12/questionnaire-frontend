@@ -85,11 +85,12 @@ export default function TabSurvey() {
         </Grid>
 
         {/* 開始時間 */}
-        <Grid size={6}>
+        <label htmlFor="">開始時間:</label>
+        <Grid size={12}>
           <TextField
             type="date"
             onChange={(e) => dispatch({ type: 'SET_START_DATE', payload: e.target.value })}
-            sx={{ width: 200 }}
+            sx={{ width: 300 }}
             size="small"
             value={quizData.startDate || ''}
             slotProps={{
@@ -104,11 +105,12 @@ export default function TabSurvey() {
         </Grid>
 
         {/* 結束時間 */}
-        <Grid size={6}>
+        <label htmlFor="">結束時間:</label>
+        <Grid size={12}>
           <TextField
             type="date"
             onChange={(e) => dispatch({ type: 'SET_END_DATE', payload: e.target.value })}
-            sx={{ width: 200 }}
+            sx={{ width: 300 }}
             size="small"
             value={quizData.endDate || ''}
             slotProps={{
@@ -123,7 +125,13 @@ export default function TabSurvey() {
         </Grid>
 
         <Grid size={12} sx={{ mt: 2 }}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
+          <Button
+            variant="contained"
+            color="secondary"
+            fullWidth
+            onClick={handleSubmit}
+            sx={{ marginLeft: '80%', width: '20%' }}
+          >
             下一步
           </Button>
         </Grid>

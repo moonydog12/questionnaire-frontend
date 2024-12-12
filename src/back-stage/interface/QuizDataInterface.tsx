@@ -20,5 +20,5 @@ export interface QuizData {
   startDate: string | null;
   endDate: string | null;
   quesList: Question[];
-  published?: boolean;
+  published: boolean;
 }

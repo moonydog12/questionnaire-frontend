@@ -3,7 +3,6 @@ import Layout from './ui/Layout';
 import NotFound from './ui/NotFound';
 import QuizList from './front-stage/pages/QuizList';
 import Quiz from './front-stage/pages/Quiz';
-import SurveyConfirm from './front-stage/pages/SurveyConfirm';
 import Statistics from './front-stage/pages/Statistics';
 import BackStageSurveyList from './back-stage/pages/QuizList';
 import Panel from './back-stage/pages/Panel';
@@ -15,6 +14,7 @@ import { SearchResultProvider } from './context/SearchResult/SearchResultProvide
 import QuizProvider from './context/CreateUpdate/QuizProvider';
 import FillInProvider from './context/FeedIn/FillInProvider';
 import FeedbackDetails from './back-stage/pages/FeedbackDetails';
+import Confirm from './front-stage/pages/Confirm';
 
 const router = createBrowserRouter([
   {
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/confirm',
-        element: <SurveyConfirm />,
+        element: <Confirm />,
       },
       {
         path: '/statistics',
