@@ -136,15 +136,23 @@ export default function QuizList() {
             {visibleRows.map((row) => (
               <StyledTableRow key={row.id}>
                 <StyledTableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedRows.includes(row.id)}
-                    onChange={() => handleSelectRow(row.id)}
-                  />
+                  {/* 尚未開始或已結束問卷才可以刪 */}
+                  {row.status === '尚未開始' || row.status === '已結束' ? (
+                    <Checkbox
+                      checked={selectedRows.includes(row.id)}
+                      onChange={() => handleSelectRow(row.id)}
+                    />
+                  ) : null}
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.id}</StyledTableCell>
                 <StyledTableCell align="left">
                   <Link
                     to={'../panel/survey'}
+                    style={{
+                      color: row.status === '進行中' ? 'gray' : 'black',
+                      // pointerEvents: row.status === '進行中' ? 'none' : 'auto',
+                      textDecoration: row.status === '進行中' ? 'none' : 'underline',
+                    }}
                     onClick={() => {
                       dispatch({ type: 'SET_QUIZ_ID', payload: String(row.id) });
                     }}
@@ -152,9 +160,7 @@ export default function QuizList() {
                     {row.name}
                   </Link>
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.published ? '已發布' : '未發布'}
-                </StyledTableCell>
+                <StyledTableCell align="left">{row.status}</StyledTableCell>
                 <StyledTableCell align="left">
                   {new Date(row.startDate).toLocaleDateString()}
                 </StyledTableCell>
@@ -164,6 +170,11 @@ export default function QuizList() {
                 <StyledTableCell align="left">
                   <Link
                     to={'/statistics'}
+                    style={{
+                      color: row.status === '進行中' ? 'gray' : 'black',
+                      pointerEvents: row.status === '進行中' ? 'none' : 'auto',
+                      textDecoration: row.status === '進行中' ? 'none' : 'underline',
+                    }}
                     onClick={() => {
                       // 讓統計那一頁有quizId能夠用來撈資料
                       dispatch({ type: 'SET_QUIZ_ID', payload: row.id });

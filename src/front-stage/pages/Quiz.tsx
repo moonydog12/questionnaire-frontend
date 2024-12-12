@@ -77,8 +77,6 @@ export default function Quiz() {
           type: 'SET_QUIZ_DATA',
           payload: { quiz: data.quiz, questions: data.ques },
         });
-
-        console.log(fillInData);
       } catch (error) {
         console.error('Failed to fetch quiz data:', error);
       }

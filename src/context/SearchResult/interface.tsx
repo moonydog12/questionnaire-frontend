@@ -6,6 +6,7 @@ export interface SearchResult {
   startDate: string;
   endDate: string;
   published: boolean;
+  status: string;
 }
 
 // 定義 Action 類型

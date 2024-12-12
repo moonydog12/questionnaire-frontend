@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   TablePagination,
   TableBody,
@@ -25,8 +25,6 @@ const initialRowsPerPage = 10;
 export default function QuizList() {
   const { dispatch } = useContext(FillInContext);
 
-  const navigate = useNavigate();
-
   // 初次載入時獲取全部資料
   useEffect(() => {
     handleSearchSubmit();
@@ -49,9 +47,12 @@ export default function QuizList() {
     rows.length
   );
 
-  // 用篩選後的資料進行分頁
+  // 用篩選後的資料進行分頁(篩出已發布)
   const visibleRows = useMemo(
-    () => [...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    () =>
+      [...rows]
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .filter((row) => row.published),
     [page, rowsPerPage, rows]
   );
 
@@ -99,18 +100,26 @@ export default function QuizList() {
               <StyledTableRow key={row.id}>
                 <StyledTableCell align="left">
                   <Link
-                    to={'/question'}
-                    onClick={() => {
-                      // 讓填答那一頁有quizId能夠用來撈資料
-                      dispatch({ type: 'SET_QUIZ_ID', payload: row.id });
+                    to={row.status === '進行中' ? '/question' : '#'}
+                    onClick={(e) => {
+                      if (row.status !== '進行中') {
+                        // 防止非進行中狀態的連結跳轉
+                        e.preventDefault();
+                      } else {
+                        // 設定 quizId 供填答頁使用
+                        dispatch({ type: 'SET_QUIZ_ID', payload: row.id });
+                      }
+                    }}
+                    style={{
+                      color: row.status === '進行中' ? 'black' : 'gray', // 禁用狀態改為灰色
+                      pointerEvents: row.status === '進行中' ? 'auto' : 'none', // 禁用點擊
+                      textDecoration: row.status === '進行中' ? 'underline' : 'none', // 加強視覺差異
                     }}
                   >
                     {row.name}
                   </Link>
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.published ? '已發布' : '未發布'}
-                </StyledTableCell>
+                <StyledTableCell align="left">{row.status}</StyledTableCell>
                 <StyledTableCell align="left">
                   {new Date(row.startDate).toLocaleDateString()}
                 </StyledTableCell>
@@ -120,6 +129,11 @@ export default function QuizList() {
                 <StyledTableCell align="left">
                   <Link
                     to={'/statistics'}
+                    style={{
+                      color: row.status === '進行中' ? 'black' : 'gray', // 禁用狀態改為灰色
+                      pointerEvents: row.status === '進行中' ? 'auto' : 'none', // 禁用點擊
+                      textDecoration: row.status === '進行中' ? 'underline' : 'none', // 加強視覺差異
+                    }}
                     onClick={() => {
                       // 讓統計那一頁有quizId能夠用來撈資料
                       dispatch({ type: 'SET_QUIZ_ID', payload: row.id });

@@ -23,7 +23,7 @@ export default function Confirm() {
       phone: fillInData.user.phone,
       email: fillInData.user.email,
       age: fillInData.user.age,
-      fillinDate: '2024-12-14', // 自動填入今天日期
+      fillinDate: new Date().toISOString().split('T')[0], // 自動填入今天日期
       answer: fillInData.answer,
     };
 

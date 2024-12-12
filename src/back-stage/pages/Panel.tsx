@@ -2,7 +2,6 @@ import { Box, Paper } from '@mui/material';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import TabSurvey from './TabSurvey';
 import TabFeedback from './TabFeedback';
-import TabStatistics from './TabStatistics';
 import TabQuestions from './TabQuestions';
 import Unicorn from '../../ui/Unicorn';
 import StyledTab from '../../ui/widgets/StyledTab';
@@ -39,7 +38,6 @@ export default function Panel() {
           <StyledTab label="問卷" value="survey" selected={currentTab === 'survey'} />
           <StyledTab label="題目" value="questions" selected={currentTab === 'questions'} />
           <StyledTab label="回饋" value="feedback" selected={currentTab === 'feedback'} />
-          <StyledTab label="統計" value="statistics" selected={currentTab === 'statistics'} />
         </StyledTabs>
       </Paper>
 
@@ -48,7 +46,6 @@ export default function Panel() {
           <Route path="survey" element={<TabSurvey />} />
           <Route path="questions" element={<TabQuestions />} />
           <Route path="feedback" element={<TabFeedback />} />
-          <Route path="statistics" element={<TabStatistics />} />
         </Routes>
       </Paper>
     </Box>

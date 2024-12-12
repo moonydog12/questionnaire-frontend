@@ -30,6 +30,16 @@ export default function useSearch(): UseSearchReturn {
     setEndDate(date);
   };
 
+  const determineStatus = (quiz: SearchResult): string => {
+    const today = new Date();
+    const quizStartDate = new Date(quiz.startDate);
+    const quizEndDate = new Date(quiz.endDate);
+
+    if (today < quizStartDate) return '尚未開始';
+    if (today > quizEndDate) return '已結束';
+    return '進行中';
+  };
+
   const handleSearchSubmit = async () => {
     try {
       const response = await fetch('http://localhost:8080/quiz/search', {
@@ -49,9 +59,14 @@ export default function useSearch(): UseSearchReturn {
       }
 
       const data = await response.json();
-      setRows(data.quizList);
+      const updatedRows = data.quizList.map((quiz: SearchResult) => ({
+        ...quiz,
+        status: determineStatus(quiz),
+      }));
+
+      setRows(updatedRows);
     } catch (error) {
-       // TODO:modal
+      // TODO:modal
       console.error('Failed to fetch search results:', error);
     }
   };

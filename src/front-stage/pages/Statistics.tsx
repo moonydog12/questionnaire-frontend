@@ -60,7 +60,7 @@ export default function SurveyResult() {
           color="secondary"
           variant="contained"
           onClick={() => {
-            navigate('..');
+            navigate(-1);
           }}
         >
           回上一頁
@@ -80,7 +80,7 @@ export default function SurveyResult() {
         color="secondary"
         variant="contained"
         onClick={() => {
-          navigate('..');
+          navigate(-1);
         }}
       >
         回上一頁
